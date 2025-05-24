@@ -32,12 +32,12 @@ exports.login = (req, res) => {
 };
 
 exports.register = (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password, email, role } = req.body;
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) return res.status(500).json({ message: "Hashing error" });
     db.query(
-      "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-      [username, hash, role],
+      "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
+      [username, hash, email, role],
       (err, result) => {
         if (err) return res.status(500).json({ message: "Register failed" });
         res.json({ message: "User registered" });

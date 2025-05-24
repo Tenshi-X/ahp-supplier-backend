@@ -1,0 +1,10 @@
+### Login
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "gustian",
+  "password": "gustianjawa",
+  "email": "gustian@gmail.com",
+  "role": "Staff"
+}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 24, 2025 at 09:23 AM
+-- Generation Time: May 24, 2025 at 09:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -100,6 +100,7 @@ CREATE TABLE `supplier` (
   `nama` varchar(100) NOT NULL,
   `alamat` text DEFAULT NULL,
   `contact` varchar(100) DEFAULT NULL,
+  `maksimal_produksi` int(11) NOT NULL,
   `keterangan` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

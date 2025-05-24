@@ -6,7 +6,7 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
 router.post(
   "/input",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   supplyController.inputSupply
 );
 

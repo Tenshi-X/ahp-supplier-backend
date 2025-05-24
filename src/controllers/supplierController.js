@@ -68,3 +68,66 @@ exports.deleteSupplier = (req, res) => {
     res.json({ message: "Supplier berhasil dihapus" });
   });
 };
+
+// CREATE nilaiKriteriaSupplier
+exports.addNilaiKriteria = (req, res) => {
+  const { supplierId } = req.params;
+  const { namaKriteria, nilai } = req.body;
+
+  db.query(
+    "INSERT INTO nilaikriteriasupplier (supplierId, namaKriteria, nilai) VALUES (?, ?, ?)",
+    [supplierId, namaKriteria, nilai],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Gagal menambahkan nilai kriteria" });
+      }
+      res.json({
+        message: "Nilai kriteria berhasil ditambahkan",
+        id: result.insertId,
+      });
+    }
+  );
+};
+
+// GET all nilaiKriteria by supplier
+exports.getNilaiKriteriaBySupplier = (req, res) => {
+  const { supplierId } = req.params;
+
+  db.query(
+    "SELECT * FROM nilaikriteriasupplier WHERE supplierId = ?",
+    [supplierId],
+    (err, results) => {
+      if (err)
+        return res.status(500).json({ message: "Gagal mengambil nilai kriteria" });
+      res.json(results);
+    }
+  );
+};
+
+// UPDATE nilaiKriteria
+exports.updateNilaiKriteria = (req, res) => {
+  const { id } = req.params;
+  const { namaKriteria, nilai } = req.body;
+
+  db.query(
+    "UPDATE nilaikriteriasupplier SET namaKriteria = ?, nilai = ? WHERE id = ?",
+    [namaKriteria, nilai, id],
+    (err, result) => {
+      if (err)
+        return res.status(500).json({ message: "Gagal memperbarui nilai kriteria" });
+      res.json({ message: "Nilai kriteria berhasil diperbarui" });
+    }
+  );
+};
+
+// DELETE nilaiKriteria
+exports.deleteNilaiKriteria = (req, res) => {
+  const { id } = req.params;
+
+  db.query("DELETE FROM nilaikriteriasupplier WHERE id = ?", [id], (err, result) => {
+    if (err)
+      return res.status(500).json({ message: "Gagal menghapus nilai kriteria" });
+    res.json({ message: "Nilai kriteria berhasil dihapus" });
+  });
+};

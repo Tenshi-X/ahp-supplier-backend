@@ -3,8 +3,8 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "gustian1234",
-  "password": "gustianjawa123",
+  "username": "gustian",
+  "password": "gustianjawa",
   "email": "gustian1234@gmail.com",
-  "role": "Staff"
+  "role": "staff"
 }

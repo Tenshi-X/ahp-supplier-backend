@@ -6,7 +6,7 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
 router.post(
   "/create",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   reportController.createReport
 );
 
@@ -27,7 +27,7 @@ router.put(
 router.get(
   "/:report_id/pdf",
   protect,
-  restrictTo("tim_pengadaan", "junior_manager"),
+  restrictTo("staff", "junior_manager"),
   reportController.generatePDF
 );
 

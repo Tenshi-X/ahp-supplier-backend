@@ -3,40 +3,69 @@ const router = express.Router();
 const supplierController = require("../controllers/supplierController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-// CRUD Supplier (akses tim_pengadaan)
+// CRUD Supplier (akses staff)
 router.post(
   "/",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   supplierController.createSupplier
 );
 
 router.get(
   "/",
   protect,
-  restrictTo("tim_pengadaan", "junior_manager"),
+  restrictTo("staff", "junior_manager"),
   supplierController.getAllSuppliers
 );
 
 router.get(
   "/:id",
   protect,
-  restrictTo("tim_pengadaan", "junior_manager"),
+  restrictTo("staff", "junior_manager"),
   supplierController.getSupplierById
 );
 
 router.put(
   "/:id",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   supplierController.updateSupplier
 );
 
 router.delete(
   "/:id",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   supplierController.deleteSupplier
+);
+
+// Nilai Kriteria Supplier
+router.post(
+  "/:supplierId/nilai-kriteria",
+  protect,
+  restrictTo("staff"),
+  supplierController.addNilaiKriteria
+);
+
+router.get(
+  "/:supplierId/nilai-kriteria",
+  protect,
+  restrictTo("staff", "junior_manager"),
+  supplierController.getNilaiKriteriaBySupplier
+);
+
+router.put(
+  "/nilai-kriteria/:id",
+  protect,
+  restrictTo("staff"),
+  supplierController.updateNilaiKriteria
+);
+
+router.delete(
+  "/nilai-kriteria/:id",
+  protect,
+  restrictTo("staff"),
+  supplierController.deleteNilaiKriteria
 );
 
 module.exports = router;

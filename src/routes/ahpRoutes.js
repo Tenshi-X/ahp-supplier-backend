@@ -6,7 +6,7 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
 router.get(
   "/:supply_id",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   ahpController.calculateAHP
 );
 

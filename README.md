@@ -29,7 +29,7 @@ Registrasi pengguna baru.
   "username": "user1",
   "password": "password123",
   "email": "user1@example.com",
-  "role": "tim_pengadaan"
+  "role": "staff"
 }
 ```
 
@@ -43,7 +43,7 @@ Logout pengguna (menghapus sesi di sisi client).
 ## 🧾 Supplier Management
 
 ### `POST /api/supplier`
-**Role**: `staff` / `tim_pengadaan`  
+**Role**: `staff`  
 Menambahkan data supplier baru.
 
 **Request Body:**

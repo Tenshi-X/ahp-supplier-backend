@@ -6,7 +6,7 @@ exports.inputSupply = (req, res) => {
   const tanggal = new Date();
 
   db.query(
-    "INSERT INTO report (kebutuhan, jumlah_kebutuhan, staff_id, tanggal) VALUES (?, ?, ?, ?)",
+    "INSERT INTO catatan_supply (kebutuhan, jumlah_kebutuhan, staff_id, tanggal) VALUES (?, ?, ?, ?)",
     [nama_barang, jumlah, staff_id, tanggal],
     (err, result) => {
       if (err) {
@@ -17,7 +17,7 @@ exports.inputSupply = (req, res) => {
       }
       res.json({
         message: "Kebutuhan supply berhasil diinput",
-        report_id: result.insertId,
+        catatan_supply_id: result.insertId,
       });
     }
   );

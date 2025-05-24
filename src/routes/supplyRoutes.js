@@ -1,4 +1,3 @@
-// routes/supplyRoutes.js
 const express = require("express");
 const router = express.Router();
 const supplyController = require("../controllers/supplyController");

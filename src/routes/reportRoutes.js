@@ -1,10 +1,8 @@
-// routes/reportRoutes.js
 const express = require("express");
 const router = express.Router();
 const reportController = require("../controllers/reportController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-// Tim pengadaan membuat laporan
 router.post(
   "/create",
   protect,
@@ -12,18 +10,25 @@ router.post(
   reportController.createReport
 );
 
-// Junior manager melihat semua laporan dan menyetujui
 router.get(
   "/",
   protect,
   restrictTo("junior_manager"),
   reportController.getAllReports
 );
+
 router.put(
   "/:report_id/approval",
   protect,
   restrictTo("junior_manager"),
   reportController.updateApproval
+);
+
+router.get(
+  "/:report_id/pdf",
+  protect,
+  restrictTo("tim_pengadaan", "junior_manager"),
+  reportController.generatePDF
 );
 
 module.exports = router;

@@ -45,3 +45,7 @@ exports.register = (req, res) => {
     );
   });
 };
+
+exports.logout = (req, res) => {
+  res.json({ message: "User logged out." });
+};

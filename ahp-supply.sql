@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2025 at 04:45 PM
+-- Generation Time: May 24, 2025 at 09:23 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `ahp-supply`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `catatan_supply`
+--
+
+CREATE TABLE `catatan_supply` (
+  `id` int(11) NOT NULL,
+  `kebutuhan` varchar(255) NOT NULL,
+  `jumlah_kebutuhan` int(11) NOT NULL,
+  `staff_id` int(11) NOT NULL,
+  `tanggal` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -67,10 +81,12 @@ CREATE TABLE `rankingsuppliers` (
 
 CREATE TABLE `report` (
   `id` int(11) NOT NULL,
-  `kebutuhan` varchar(255) NOT NULL,
-  `jumlah_kebutuhan` int(11) NOT NULL,
-  `staff_id` int(11) NOT NULL,
-  `tanggal` date NOT NULL
+  `catatan_supply_id` int(11) NOT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `catatan_validasi` text DEFAULT NULL,
+  `status` enum('disetujui','ditolak','menunggu') DEFAULT 'menunggu',
+  `tanggal_laporan` date NOT NULL,
+  `approved_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -119,6 +135,12 @@ CREATE TABLE `users` (
 --
 
 --
+-- Indexes for table `catatan_supply`
+--
+ALTER TABLE `catatan_supply`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `kriteria`
 --
 ALTER TABLE `kriteria`
@@ -143,7 +165,8 @@ ALTER TABLE `rankingsuppliers`
 --
 ALTER TABLE `report`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `staff_id` (`staff_id`);
+  ADD KEY `catatan_supply_id` (`catatan_supply_id`),
+  ADD KEY `approved_by` (`approved_by`);
 
 --
 -- Indexes for table `supplier`
@@ -168,6 +191,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `catatan_supply`
+--
+ALTER TABLE `catatan_supply`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `kriteria`
@@ -231,7 +260,8 @@ ALTER TABLE `rankingsuppliers`
 -- Constraints for table `report`
 --
 ALTER TABLE `report`
-  ADD CONSTRAINT `report_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `report_ibfk_1` FOREIGN KEY (`catatan_supply_id`) REFERENCES `catatan_supply` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `usedcriteria`

@@ -10,11 +10,5 @@ router.post(
   restrictTo("tim_pengadaan"),
   supplyController.inputSupply
 );
-router.post(
-  "/pairwise",
-  protect,
-  restrictTo("tim_pengadaan"),
-  supplyController.inputPairwise
-);
 
 module.exports = router;

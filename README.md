@@ -143,6 +143,29 @@ Mencatat kebutuhan supply.
 
 ---
 
+## 📥 Report Entry
+### `POST /api/reports/create`
+Mencatat laporan.
+
+**Request Body:**
+```json
+{
+  "catatan_supply_id": 12,
+  "file_path": "/uploads/laporan-12.pdf",
+  "catatan_validasi": "Semua kriteria sudah sesuai",
+  "usedCriteria": [
+    { "criteriaName": "Harga", "criteriaValue": 0.3 },
+    { "criteriaName": "Kualitas", "criteriaValue": 0.25 },
+    { "criteriaName": "Waktu Pengiriman", "criteriaValue": 0.2 },
+    { "criteriaName": "Kemudahan Komunikasi", "criteriaValue": 0.1 },
+    { "criteriaName": "Ketersediaan Stok", "criteriaValue": 0.1 },
+    { "criteriaName": "Garansi", "criteriaValue": 0.05 }
+  ]
+}
+```
+### `NOTE : nilai total criteriaValue totalnya = 1 (100%) agar bobot AHP valid`
+
+
 ## 🔒 Authorization
 
 Untuk mengakses endpoint selain login, register, dan logout, pengguna **wajib menyertakan JWT Token** pada header:

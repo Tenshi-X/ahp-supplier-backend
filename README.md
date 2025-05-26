@@ -150,20 +150,20 @@ Mencatat laporan.
 **Request Body:**
 ```json
 {
-  "catatan_supply_id": 1,
-  "file_path": "/path/to/file.pdf",
-  "catatan_validasi": "Menunggu",
-  "tanggal_laporan": "2025-05-26",
+  "catatan_supply_id": 12,
+  "file_path": "/uploads/laporan-12.pdf",
+  "catatan_validasi": "Semua kriteria sudah sesuai",
   "usedCriteria": [
-    { "criteriaName": "Harga", "criteriaValue": 0.7 },
-    { "criteriaName": "Kualitas", "criteriaValue": 0.8 },
-    { "criteriaName": "Waktu Pengiriman", "criteriaValue": 0.9 },
-    { "criteriaName": "Kemudahan Komunikasi", "criteriaValue": 0.6 },
-    { "criteriaName": "Ketersediaan Stok", "criteriaValue": 0.75 },
-    { "criteriaName": "Garansi", "criteriaValue": 0.85 }
+    { "criteriaName": "Harga", "criteriaValue": 0.3 },
+    { "criteriaName": "Kualitas", "criteriaValue": 0.25 },
+    { "criteriaName": "Waktu Pengiriman", "criteriaValue": 0.2 },
+    { "criteriaName": "Kemudahan Komunikasi", "criteriaValue": 0.1 },
+    { "criteriaName": "Ketersediaan Stok", "criteriaValue": 0.1 },
+    { "criteriaName": "Garansi", "criteriaValue": 0.05 }
   ]
 }
 ```
+### `NOTE : nilai total criteriaValue totalnya = 1 (100%) agar bobot AHP valid`
 
 
 ## 🔒 Authorization

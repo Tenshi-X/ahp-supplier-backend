@@ -2,6 +2,7 @@ const db = require("../models/db");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
+const { generateSupplierRankings } = require("../helpers/ahp");
 
 exports.createReport = (req, res) => {
   const { catatan_supply_id, file_path, catatan_validasi } = req.body;
@@ -15,9 +16,40 @@ exports.createReport = (req, res) => {
         console.error(err);
         return res.status(500).json({ message: "Gagal membuat laporan" });
       }
-      res.json({
-        message: "Laporan berhasil dibuat",
-        report_id: result.insertId,
+      const reportId = result.insertId;
+
+      const usedCriteria = req.body.usedCriteria;
+      const values = [];
+      const placeholders = usedCriteria
+        .map((item) => {
+          values.push(reportId, item.criteriaName, item.criteriaValue);
+          return "(?, ?, ?)";
+        })
+        .join(", ");
+
+      const insertUsedCriteriaQuery = `INSERT INTO usedcriteria (reportId, criteriaName, criteriaValue) VALUES ${placeholders}`;
+
+      db.query(insertUsedCriteriaQuery, values, async (err2) => {
+        if (err2) {
+          console.error(err2);
+          return res.status(500).json({
+            message: "Laporan dibuat, tapi gagal menyimpan used criteria",
+          });
+        }
+        try {
+          await generateSupplierRankings(reportId, usedCriteria);
+          res.json({
+            message:
+              "Laporan, used criteria, dan ranking supplier berhasil dibuat",
+            report_id: reportId,
+          });
+        } catch (errorMsg) {
+          console.error(errorMsg);
+          return res.status(500).json({
+            message:
+              "Laporan dan used criteria berhasil, tapi gagal menyimpan ranking supplier",
+          });
+        }
       });
     }
   );

@@ -3,7 +3,6 @@ const router = express.Router();
 const supplierController = require("../controllers/supplierController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-// CRUD Supplier (akses staff)
 router.post(
   "/",
   protect,

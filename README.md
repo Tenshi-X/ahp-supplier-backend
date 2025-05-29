@@ -128,7 +128,7 @@ Menghapus nilai kriteria berdasarkan ID.
 
 ---
 
-## 📥 Supply Entry
+## 📥 Input Supply
 
 ### `POST /api/supply`
 Mencatat kebutuhan supply.
@@ -140,10 +140,9 @@ Mencatat kebutuhan supply.
   "jumlah": 120
 }
 ```
-## 📥 Kriteria Entry
+## 📥 Kriteria
 
-### `Get All Kriteria`
-URL: GET /api/kriteria
+### `GET /api/kriteria`
 
 **Response:**
 ```json
@@ -162,8 +161,7 @@ URL: GET /api/kriteria
 
 ```
 
-### `Get Kriteria by ID`
-URL: GET /api/kriteria/:id
+### `GET /api/kriteria/:id`
 
 **Response:**
 ```json
@@ -174,8 +172,8 @@ URL: GET /api/kriteria/:id
 }
 ```
 
-### `Create Kriteria`
-URL: POST /api/kriteria
+### `POST /api/kriteria`
+
 **Request Body:**
 ```json
 {
@@ -192,8 +190,8 @@ URL: POST /api/kriteria
 }
 ```
 
-Update Kriteria
-URL: PUT /api/kriteria/:id
+### `PUT /api/kriteria/:id`
+
 **Request Body:**
 ```json
 {
@@ -201,8 +199,7 @@ URL: PUT /api/kriteria/:id
   "nama": "Harga Update"
 }
 ```
-Delete Kriteria
-URL: DELETE /api/kriteria/:id
+### `DELETE /api/kriteria/:id`
 **Response:**
 ```json
 { "message": "Kriteria berhasil dihapus" }

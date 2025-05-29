@@ -5,20 +5,18 @@ require("dotenv").config();
 const authRoutes = require("./src/routes/authRoutes");
 const supplyRoutes = require("./src/routes/supplyRoutes");
 const reportRoutes = require("./src/routes/reportRoutes");
-const ahpRoutes = require("./src/routes/ahpRoutes");
 const supplierRoutes = require("./src/routes/supplierRoutes");
+const kriteriaRoutes = require("./src/routes/kriteriaRoutes");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routing
 app.use("/api/auth", authRoutes);
 app.use("/api/supplies", supplyRoutes);
 app.use("/api/reports", reportRoutes);
-app.use("/api/ahp", ahpRoutes);
 app.use("/api/supplier", supplierRoutes);
-
+app.use("/api/kriteria", kriteriaRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

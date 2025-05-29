@@ -3,35 +3,35 @@ const router = express.Router();
 const kriteriaController = require("../controllers/kriteriaController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-// CRUD Kriteria (akses tim_pengadaan)
+// CRUD Kriteria (akses staff)
 router.post(
   "/",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   kriteriaController.createKriteria
 );
 router.get(
   "/",
   protect,
-  restrictTo("tim_pengadaan", "junior_manager"),
+  restrictTo("staff", "junior_manager"),
   kriteriaController.getAllKriteria
 );
 router.get(
   "/:id",
   protect,
-  restrictTo("tim_pengadaan", "junior_manager"),
+  restrictTo("staff", "junior_manager"),
   kriteriaController.getKriteriaById
 );
 router.put(
   "/:id",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   kriteriaController.updateKriteria
 );
 router.delete(
   "/:id",
   protect,
-  restrictTo("tim_pengadaan"),
+  restrictTo("staff"),
   kriteriaController.deleteKriteria
 );
 

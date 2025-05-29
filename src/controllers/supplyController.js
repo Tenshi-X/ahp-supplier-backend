@@ -1,5 +1,6 @@
 const db = require("../models/db");
 
+// CREATE
 exports.inputSupply = (req, res) => {
   const { nama_barang, jumlah } = req.body;
   const staff_id = req.user.id;
@@ -21,4 +22,64 @@ exports.inputSupply = (req, res) => {
       });
     }
   );
+};
+
+// READ ALL
+exports.getAllSupply = (req, res) => {
+  db.query(
+    `SELECT cs.*, u.username AS staff_username
+     FROM catatan_supply cs
+     JOIN users u ON cs.staff_id = u.id`,
+    (err, results) => {
+      if (err)
+        return res.status(500).json({ message: "Gagal mengambil data supply" });
+      res.json(results);
+    }
+  );
+};
+
+// READ BY ID
+exports.getSupplyById = (req, res) => {
+  const { id } = req.params;
+
+  db.query(
+    `SELECT cs.*, u.username AS staff_username
+     FROM catatan_supply cs
+     JOIN users u ON cs.staff_id = u.id
+     WHERE cs.id = ?`,
+    [id],
+    (err, results) => {
+      if (err)
+        return res.status(500).json({ message: "Gagal mengambil data supply" });
+      if (results.length === 0)
+        return res.status(404).json({ message: "Supply tidak ditemukan" });
+      res.json(results[0]);
+    }
+  );
+};
+
+// UPDATE
+exports.updateSupply = (req, res) => {
+  const { id } = req.params;
+  const { nama_barang, jumlah } = req.body;
+
+  db.query(
+    "UPDATE catatan_supply SET kebutuhan = ?, jumlah_kebutuhan = ? WHERE id = ?",
+    [nama_barang, jumlah, id],
+    (err, result) => {
+      if (err)
+        return res.status(500).json({ message: "Gagal memperbarui supply" });
+      res.json({ message: "Supply berhasil diperbarui" });
+    }
+  );
+};
+
+// DELETE
+exports.deleteSupply = (req, res) => {
+  const { id } = req.params;
+
+  db.query("DELETE FROM catatan_supply WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).json({ message: "Gagal menghapus supply" });
+    res.json({ message: "Supply berhasil dihapus" });
+  });
 };

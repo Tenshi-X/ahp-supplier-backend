@@ -128,7 +128,7 @@ Menghapus nilai kriteria berdasarkan ID.
 
 ---
 
-## 📥 Input Supply
+## 📥 Supply
 
 ### `POST /api/supply`
 Mencatat kebutuhan supply.
@@ -140,6 +140,45 @@ Mencatat kebutuhan supply.
   "jumlah": 120
 }
 ```
+
+### `GET /api/supplies`
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "kebutuhan": "Mur 40",
+    "jumlah_kebutuhan": 200,
+    "staff_id": 3,
+    "tanggal": "2025-05-29T00:00:00.000Z",
+    "staff_username": "budi"
+  }
+]
+```
+### `GET /api/supplies/:id`
+
+**Response:**
+```json
+{
+  "id": 1,
+  "kebutuhan": "Mur",
+  "jumlah_kebutuhan": 200,
+  "staff_id": 3,
+  "tanggal": "2025-05-29T00:00:00.000Z",
+  "staff_username": "budi"
+}
+
+```
+### `PUT /api/supplies/:id`
+**Request Body:**
+```json
+{
+  "nama_barang": "Mur 50",
+  "jumlah": 300
+}
+```
+## `DELETE /api/supplies/:id`
+
 ## 📥 Kriteria
 
 ### `GET /api/kriteria`

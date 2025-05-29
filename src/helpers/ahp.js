@@ -1,8 +1,7 @@
-const db = require("../config/db");
+const db = require("../models/db");
 
 exports.generateSupplierRankings = async (reportId, usedCriteria) => {
   return new Promise((resolve, reject) => {
-    // Step 1: Ambil semua supplier
     db.query("SELECT * FROM supplier", (err, suppliers) => {
       if (err) return reject("Gagal mengambil supplier");
 

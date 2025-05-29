@@ -140,8 +140,73 @@ Mencatat kebutuhan supply.
   "jumlah": 120
 }
 ```
+## 📥 Kriteria Entry
 
----
+### `Get All Kriteria`
+URL: GET /api/kriteria
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "kode": "C1",
+    "nama": "Harga"
+  },
+  {
+    "id": 2,
+    "kode": "C2",
+    "nama": "Kualitas"
+  }
+]
+
+```
+
+### `Get Kriteria by ID`
+URL: GET /api/kriteria/:id
+
+**Response:**
+```json
+{
+  "id": 1,
+  "kode": "C1",
+  "nama": "Harga"
+}
+```
+
+### `Create Kriteria`
+URL: POST /api/kriteria
+**Request Body:**
+```json
+{
+  "kode": "C3",
+  "nama": "Waktu Pengiriman"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Kriteria berhasil ditambahkan",
+  "kriteria_id": 3
+}
+```
+
+Update Kriteria
+URL: PUT /api/kriteria/:id
+**Request Body:**
+```json
+{
+  "kode": "C1",
+  "nama": "Harga Update"
+}
+```
+Delete Kriteria
+URL: DELETE /api/kriteria/:id
+**Response:**
+```json
+{ "message": "Kriteria berhasil dihapus" }
+```
 
 ## 📥 Report Entry
 ### `POST /api/reports/create`

@@ -53,9 +53,11 @@ router.post("/login", authController.login);
  *                 type: string
  *               password:
  *                 type: string
+ *               email:
+ *                 type: string
  *               role:
  *                 type: string
- *                 example: tim_pengadaan
+ *                 example: staff
  *     responses:
  *       201:
  *         description: Registrasi berhasil

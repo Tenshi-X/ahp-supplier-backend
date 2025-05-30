@@ -9,8 +9,14 @@ exports.createReport = (req, res) => {
   const tanggal_laporan = new Date();
 
   db.query(
-    "INSERT INTO report (catatan_supply_id, file_path, catatan_validasi, tanggal_laporan) VALUES (?, ?, ?, ?)",
-    [catatan_supply_id, file_path, catatan_validasi, tanggal_laporan],
+    "INSERT INTO report (catatan_supply_id, file_path, catatan_validasi, status, tanggal_laporan) VALUES (?, ?, ?, ?, ?)",
+    [
+      catatan_supply_id,
+      file_path,
+      catatan_validasi,
+      "menunggu",
+      tanggal_laporan,
+    ],
     (err, result) => {
       if (err) {
         console.error(err);
@@ -57,7 +63,7 @@ exports.createReport = (req, res) => {
 
 exports.getAllReports = (req, res) => {
   const query = `
-    SELECT r.*, u.username, cs.kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input
+    SELECT r.*, u.username, cs.nama_kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input
     FROM report r
     JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
     JOIN users u ON cs.staff_id = u.id
@@ -67,6 +73,35 @@ exports.getAllReports = (req, res) => {
     if (err)
       return res.status(500).json({ message: "Gagal mengambil laporan" });
     res.json(results);
+  });
+};
+
+exports.getReportByCatatanId = (req, res) => {
+  const { catatan_supply_id } = req.params;
+
+  const query = `
+    SELECT r.*, cs.nama_kebutuhan, cs.jumlah_kebutuhan, u.username
+    FROM report r
+    JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
+    JOIN users u ON cs.staff_id = u.id
+    WHERE r.catatan_supply_id = ?
+  `;
+
+  db.query(query, [catatan_supply_id], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json({ message: "Terjadi kesalahan saat mengambil data" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        message: "Laporan tidak ditemukan untuk catatan_supply_id ini",
+      });
+    }
+
+    res.json(results[0]);
   });
 };
 
@@ -92,7 +127,7 @@ exports.generatePDF = (req, res) => {
   const { report_id } = req.params;
 
   const query = `
-    SELECT cs.kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input, u.username
+    SELECT cs.nama_kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input, u.username
     FROM report r
     JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
     JOIN users u ON cs.staff_id = u.id
@@ -107,13 +142,19 @@ exports.generatePDF = (req, res) => {
     const data = results[0];
     const doc = new PDFDocument();
     const filename = `laporan_report_${report_id}.pdf`;
-    const filePath = path.join(__dirname, `../pdf/${filename}`);
+    const folderPath = path.join(__dirname, "../public/pdf");
+    const filePath = path.join(folderPath, filename);
+
+    // Pastikan folder /public/pdf/ tersedia
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true });
+    }
 
     doc.pipe(fs.createWriteStream(filePath));
     doc.fontSize(20).text("Laporan Pengadaan Supply", { align: "center" });
     doc.moveDown();
 
-    doc.fontSize(12).text(`Nama Barang: ${data.kebutuhan}`);
+    doc.fontSize(12).text(`Nama Barang: ${data.nama_kebutuhan}`);
     doc.text(`Jumlah: ${data.jumlah_kebutuhan}`);
     doc.text(`Dibuat oleh: ${data.username}`);
     doc.text(
@@ -122,7 +163,8 @@ exports.generatePDF = (req, res) => {
     doc.end();
 
     doc.on("finish", () => {
-      res.json({ message: "PDF berhasil dibuat", file: filePath });
+      const fileURL = `${process.env.BASE_URL}/pdf/${filename}`;
+      res.json({ message: "PDF berhasil dibuat", url: fileURL });
     });
   });
 };

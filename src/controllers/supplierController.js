@@ -2,11 +2,12 @@ const db = require("../models/db");
 
 // CREATE
 exports.createSupplier = (req, res) => {
-  const { nama, alamat, contact, maksimal_produksi, keterangan } = req.body;
+  const { nama, alamat, contact, nama_supply, maksimal_produksi, keterangan } =
+    req.body;
 
   db.query(
-    "INSERT INTO supplier (nama, alamat, contact, maksimal_produksi, keterangan) VALUES (?, ?, ?, ?)",
-    [nama, alamat, contact, maksimal_produksi, keterangan],
+    "INSERT INTO supplier (nama, alamat, contact, nama_supply, maksimal_produksi, keterangan) VALUES (?, ?, ?, ?, ?, ?)",
+    [nama, alamat, contact, nama_supply, maksimal_produksi, keterangan],
     (err, result) => {
       if (err) {
         console.error(err);
@@ -45,11 +46,12 @@ exports.getSupplierById = (req, res) => {
 // UPDATE
 exports.updateSupplier = (req, res) => {
   const { id } = req.params;
-  const { nama, alamat, contact, keterangan } = req.body;
+  const { nama, alamat, contact, nama_supply, maksimal_produksi, keterangan } =
+    req.body;
 
   db.query(
-    "UPDATE supplier SET nama = ?, alamat = ?, contact = ?, maksimal_produksi = ?, keterangan = ? WHERE id = ?",
-    [nama, alamat, contact, keterangan, id],
+    "UPDATE supplier SET nama = ?, alamat = ?, contact = ?, nama_supply = ?, maksimal_produksi = ?, keterangan = ? WHERE id = ?",
+    [nama, alamat, contact, nama_supply, maksimal_produksi, keterangan],
     (err, result) => {
       if (err)
         return res.status(500).json({ message: "Gagal memperbarui supplier" });
@@ -80,7 +82,9 @@ exports.addNilaiKriteria = (req, res) => {
     (err, result) => {
       if (err) {
         console.error(err);
-        return res.status(500).json({ message: "Gagal menambahkan nilai kriteria" });
+        return res
+          .status(500)
+          .json({ message: "Gagal menambahkan nilai kriteria" });
       }
       res.json({
         message: "Nilai kriteria berhasil ditambahkan",
@@ -99,7 +103,9 @@ exports.getNilaiKriteriaBySupplier = (req, res) => {
     [supplierId],
     (err, results) => {
       if (err)
-        return res.status(500).json({ message: "Gagal mengambil nilai kriteria" });
+        return res
+          .status(500)
+          .json({ message: "Gagal mengambil nilai kriteria" });
       res.json(results);
     }
   );
@@ -115,7 +121,9 @@ exports.updateNilaiKriteria = (req, res) => {
     [namaKriteria, nilai, id],
     (err, result) => {
       if (err)
-        return res.status(500).json({ message: "Gagal memperbarui nilai kriteria" });
+        return res
+          .status(500)
+          .json({ message: "Gagal memperbarui nilai kriteria" });
       res.json({ message: "Nilai kriteria berhasil diperbarui" });
     }
   );
@@ -125,9 +133,15 @@ exports.updateNilaiKriteria = (req, res) => {
 exports.deleteNilaiKriteria = (req, res) => {
   const { id } = req.params;
 
-  db.query("DELETE FROM nilaikriteriasupplier WHERE id = ?", [id], (err, result) => {
-    if (err)
-      return res.status(500).json({ message: "Gagal menghapus nilai kriteria" });
-    res.json({ message: "Nilai kriteria berhasil dihapus" });
-  });
+  db.query(
+    "DELETE FROM nilaikriteriasupplier WHERE id = ?",
+    [id],
+    (err, result) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ message: "Gagal menghapus nilai kriteria" });
+      res.json({ message: "Nilai kriteria berhasil dihapus" });
+    }
+  );
 };

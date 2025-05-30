@@ -50,7 +50,9 @@ exports.generateSupplierRankings = async (reportId, usedCriteria) => {
             });
 
             return {
+              supplierId: supplier.id,
               supplierName: supplier.nama,
+              nama_supply: supplier.nama_supply,
               alokasi_kebutuhan: supplier.maksimal_produksi,
               score: totalScore,
             };
@@ -66,12 +68,13 @@ exports.generateSupplierRankings = async (reportId, usedCriteria) => {
           const insertValues = supplierScores.map((s) => [
             reportId,
             s.supplierName,
+            s.nama_supply,
             s.ranking,
             s.alokasi_kebutuhan,
           ]);
 
           const insertQuery = `
-          INSERT INTO rankingsuppliers (reportId, supplierName, ranking, alokasi_kebutuhan)
+          INSERT INTO rankingsuppliers (reportId, supplierName, nama_supply, ranking, alokasi_kebutuhan)
           VALUES ?
         `;
 

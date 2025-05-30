@@ -45,6 +45,7 @@ app.use("/api/supplies", supplyRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/supplier", supplierRoutes);
 app.use("/api/kriteria", kriteriaRoutes);
+app.use("/pdf", express.static(path.join(__dirname, "public/pdf")));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

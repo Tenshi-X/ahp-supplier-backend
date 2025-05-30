@@ -82,6 +82,37 @@ router.get(
 
 /**
  * @swagger
+ * /report/by-catatan/{catatan_supply_id}:
+ *   get:
+ *     summary: Ambil laporan berdasarkan catatan supply ID
+ *     description: Mengambil data laporan yang berhubungan dengan catatan supply tertentu
+ *     tags: [Laporan]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: catatan_supply_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID catatan supply
+ *     responses:
+ *       200:
+ *         description: Laporan ditemukan
+ *       404:
+ *         description: Laporan tidak ditemukan
+ *       500:
+ *         description: Terjadi kesalahan saat mengambil data
+ */
+router.get(
+  "/by-catatan/:catatan_supply_id",
+  protect,
+  reportController.getReportByCatatanId
+);
+
+
+/**
+ * @swagger
  * /report/{report_id}/approval:
  *   put:
  *     summary: Update status persetujuan laporan
@@ -139,8 +170,23 @@ router.put(
  *     responses:
  *       200:
  *         description: PDF berhasil dibuat
+ *     responses:
+         200:
+           description: PDF berhasil dibuat
+           content:
+            application/json:
+             schema:
+              type: object
+              properties:
+               message:
+                type: string
+                example: PDF berhasil dibuat
+               url:
+                type: string
+                example: http://localhost:5000/pdf/laporan_report_1.pdf
  *       500:
  *         description: Gagal membuat PDF
+ * 
  */
 router.get(
   "/:report_id/pdf",

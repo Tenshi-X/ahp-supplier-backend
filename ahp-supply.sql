@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 24, 2025 at 09:55 AM
+-- Generation Time: May 30, 2025 at 01:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,7 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `catatan_supply` (
   `id` int(11) NOT NULL,
-  `kebutuhan` varchar(255) NOT NULL,
+  `nama_pemesan` varchar(255) NOT NULL,
+  `no_hp` varchar(255) NOT NULL,
+  `nama_kebutuhan` varchar(255) NOT NULL,
   `jumlah_kebutuhan` int(11) NOT NULL,
   `staff_id` int(11) NOT NULL,
   `tanggal` date NOT NULL
@@ -70,6 +72,7 @@ CREATE TABLE `rankingsuppliers` (
   `id` int(11) NOT NULL,
   `reportId` int(11) NOT NULL,
   `supplierName` varchar(100) NOT NULL,
+  `nama_supply` varchar(255) NOT NULL,
   `ranking` int(11) NOT NULL,
   `alokasi_kebutuhan` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -101,6 +104,7 @@ CREATE TABLE `supplier` (
   `nama` varchar(100) NOT NULL,
   `alamat` text DEFAULT NULL,
   `contact` varchar(100) DEFAULT NULL,
+  `nama_supply` varchar(255) NOT NULL,
   `maksimal_produksi` int(11) NOT NULL,
   `keterangan` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -131,6 +135,13 @@ CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `role` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `role`) VALUES
+(6, 'gustian', '$2b$10$yrIMsRdd7N94F.Ac2PEqnefF2YRH4pcrOyx8Vqgcckraqi.8wMf2e', 'gustian1234@gmail.com', 'staff');
 
 --
 -- Indexes for dumped tables
@@ -240,7 +251,7 @@ ALTER TABLE `usedcriteria`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables

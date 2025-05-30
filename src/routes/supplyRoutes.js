@@ -29,9 +29,13 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
  *               - nama_barang
  *               - jumlah
  *             properties:
- *               nama_barang:
+ *               nama_pemesan:
  *                 type: string
- *               jumlah:
+ *               no_hp:
+ *                 type: string
+ *               nama_kebutuhan:
+ *                 type: string
+ *               jumlah_kebutuhan:
  *                 type: integer
  *     responses:
  *       200:
@@ -122,9 +126,13 @@ router.get(
  *           schema:
  *             type: object
  *             properties:
- *               nama_barang:
+ *               nama_pemesan:
  *                 type: string
- *               jumlah:
+ *               no_hp:
+ *                 type: string
+ *               nama_kebutuhan:
+ *                 type: string
+ *               jumlah_kebutuhan:
  *                 type: integer
  *     responses:
  *       200:

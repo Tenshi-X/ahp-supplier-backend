@@ -36,6 +36,8 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
  *                 type: string
  *               contact:
  *                 type: string
+ *               nama_supply:
+ *                 type: string
  *               maksimal_produksi:
  *                 type: integer
  *               keterangan:
@@ -129,6 +131,8 @@ router.get(
  *               alamat:
  *                 type: string
  *               contact:
+ *                 type: string
+ *               nama_supply:
  *                 type: string
  *               maksimal_produksi:
  *                 type: integer

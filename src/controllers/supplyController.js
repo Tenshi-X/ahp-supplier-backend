@@ -2,13 +2,13 @@ const db = require("../models/db");
 
 // CREATE
 exports.inputSupply = (req, res) => {
-  const { nama_barang, jumlah } = req.body;
+  const { nama_pemesan, no_hp, nama_kebutuhan, jumlah_kebutuhan } = req.body;
   const staff_id = req.user.id;
   const tanggal = new Date();
 
   db.query(
-    "INSERT INTO catatan_supply (kebutuhan, jumlah_kebutuhan, staff_id, tanggal) VALUES (?, ?, ?, ?)",
-    [nama_barang, jumlah, staff_id, tanggal],
+    "INSERT INTO catatan_supply (nama_pemesan, no_hp, nama_kebutuhan, jumlah_kebutuhan, staff_id, tanggal) VALUES (?, ?, ?, ?, ?, ?)",
+    [nama_pemesan, no_hp, nama_kebutuhan, jumlah_kebutuhan, staff_id, tanggal],
     (err, result) => {
       if (err) {
         console.error(err);
@@ -61,11 +61,11 @@ exports.getSupplyById = (req, res) => {
 // UPDATE
 exports.updateSupply = (req, res) => {
   const { id } = req.params;
-  const { nama_barang, jumlah } = req.body;
+  const { nama_pemesan, no_hp, nama_kebutuhan, jumlah_kebutuhan } = req.body;
 
   db.query(
-    "UPDATE catatan_supply SET kebutuhan = ?, jumlah_kebutuhan = ? WHERE id = ?",
-    [nama_barang, jumlah, id],
+    "UPDATE catatan_supply SET nama_pemesan = ?, no_hp = ?, nama_kebutuhan = ?, jumlah_kebutuhan = ? WHERE id = ?",
+    [nama_pemesan, no_hp, nama_kebutuhan, jumlah_kebutuhan, id],
     (err, result) => {
       if (err)
         return res.status(500).json({ message: "Gagal memperbarui supply" });

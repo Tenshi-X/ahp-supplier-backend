@@ -110,7 +110,6 @@ router.get(
   reportController.getReportByCatatanId
 );
 
-
 /**
  * @swagger
  * /report/{report_id}/approval:
@@ -170,23 +169,19 @@ router.put(
  *     responses:
  *       200:
  *         description: PDF berhasil dibuat
- *     responses:
-         200:
-           description: PDF berhasil dibuat
-           content:
-            application/json:
-             schema:
-              type: object
-              properties:
-               message:
-                type: string
-                example: PDF berhasil dibuat
-               url:
-                type: string
-                example: http://localhost:5000/pdf/laporan_report_1.pdf
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: PDF berhasil dibuat
+ *                 url:
+ *                   type: string
+ *                   example: http://localhost:5000/pdf/laporan_report_1.pdf
  *       500:
  *         description: Gagal membuat PDF
- * 
  */
 router.get(
   "/:report_id/pdf",

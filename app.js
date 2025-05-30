@@ -4,6 +4,7 @@ const supplyRoutes = require("./src/routes/supplyRoutes");
 const reportRoutes = require("./src/routes/reportRoutes");
 const supplierRoutes = require("./src/routes/supplierRoutes");
 const kriteriaRoutes = require("./src/routes/kriteriaRoutes");
+const path = require("path");
 const swaggerJsdoc = require("swagger-jsdoc");
 const express = require("express");
 const cors = require("cors");

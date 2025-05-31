@@ -62,30 +62,30 @@ exports.createReport = (req, res) => {
 };
 
 exports.getAllReports = (req, res) => {
-  const query = `
-    SELECT r.*, u.username, cs.nama_kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input
-    FROM report r
-    JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
-    JOIN users u ON cs.staff_id = u.id
-  `;
+    const query = `
+      SELECT r.*, u.username, cs.nama_kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input
+      FROM report r
+      JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
+      JOIN users u ON cs.staff_id = u.id
+    `;
 
-  db.query(query, (err, results) => {
-    if (err)
-      return res.status(500).json({ message: "Gagal mengambil laporan" });
-    res.json(results);
-  });
-};
+    db.query(query, (err, results) => {
+      if (err)
+        return res.status(500).json({ message: "Gagal mengambil laporan" });
+      res.json(results);
+    });
+  };
 
-exports.getReportByCatatanId = (req, res) => {
-  const { catatan_supply_id } = req.params;
+  exports.getReportByCatatanId = (req, res) => {
+    const { catatan_supply_id } = req.params;
 
-  const query = `
-    SELECT r.*, cs.nama_kebutuhan, cs.jumlah_kebutuhan, u.username
-    FROM report r
-    JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
-    JOIN users u ON cs.staff_id = u.id
-    WHERE r.catatan_supply_id = ?
-  `;
+    const query = `
+      SELECT r.*, cs.nama_kebutuhan, cs.jumlah_kebutuhan, u.username, cs.tanggal AS tanggal_input
+      FROM report r
+      JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
+      JOIN users u ON cs.staff_id = u.id
+      WHERE r.catatan_supply_id = ?
+    `;
 
   db.query(query, [catatan_supply_id], (err, results) => {
     if (err) {
@@ -164,7 +164,22 @@ exports.generatePDF = (req, res) => {
 
     doc.on("finish", () => {
       const fileURL = `${process.env.BASE_URL}/pdf/${filename}`;
-      res.json({ message: "PDF berhasil dibuat", url: fileURL });
+
+      // Update kolom file_path di tabel report
+      const updateQuery = "UPDATE report SET file_path = ? WHERE id = ?";
+      db.query(updateQuery, [fileURL, report_id], (updateErr) => {
+        if (updateErr) {
+          console.error("Gagal update file_path:", updateErr);
+          return res
+            .status(500)
+            .json({ message: "Gagal menyimpan file_path ke laporan" });
+        }
+
+        res.json({
+          message: "PDF berhasil dibuat dan file_path disimpan",
+          url: fileURL,
+        });
+      });
     });
   });
 };

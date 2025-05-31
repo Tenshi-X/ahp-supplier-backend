@@ -51,7 +51,7 @@ exports.updateSupplier = (req, res) => {
 
   db.query(
     "UPDATE supplier SET nama = ?, alamat = ?, contact = ?, nama_supply = ?, maksimal_produksi = ?, keterangan = ? WHERE id = ?",
-    [nama, alamat, contact, nama_supply, maksimal_produksi, keterangan],
+    [nama, alamat, contact, nama_supply, maksimal_produksi, keterangan, id],
     (err, result) => {
       if (err)
         return res.status(500).json({ message: "Gagal memperbarui supplier" });

@@ -1,7 +1,5 @@
 const db = require("../models/db");
 
-const db = require("../models/db");
-
 exports.generateSupplierRankings = async (reportId, usedCriteria) => {
   return new Promise((resolve, reject) => {
     // Step 1: Ambil catatan_supply_id dari report

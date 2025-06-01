@@ -145,3 +145,14 @@ exports.deleteNilaiKriteria = (req, res) => {
     }
   );
 };
+
+exports.getUniqueNamaSupply = (req, res) => {
+  db.query("SELECT DISTINCT nama_supply FROM supplier", (err, results) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Gagal mengambil data nama_supply" });
+    }
+    res.json(results.map((row) => row.nama_supply));
+  });
+};

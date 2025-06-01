@@ -28,6 +28,7 @@ exports.generateSupplierRankings = async (reportId, usedCriteria) => {
             if (err3) return reject("Gagal mengambil supplier");
 
             const supplierIds = suppliers.map((s) => s.id);
+            console.log(supplierIds);
 
             // Step 4: Ambil nilai kriteria supplier
             const getKriteriaSupplierQuery = `

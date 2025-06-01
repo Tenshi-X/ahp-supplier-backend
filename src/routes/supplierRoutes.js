@@ -28,7 +28,6 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
  *               - nama
  *               - alamat
  *               - contact
- *               - maksimal_produksi
  *             properties:
  *               nama:
  *                 type: string
@@ -36,10 +35,6 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
  *                 type: string
  *               contact:
  *                 type: string
- *               nama_supply:
- *                 type: string
- *               maksimal_produksi:
- *                 type: integer
  *               keterangan:
  *                 type: string
  *     responses:
@@ -132,10 +127,6 @@ router.get(
  *                 type: string
  *               contact:
  *                 type: string
- *               nama_supply:
- *                 type: string
- *               maksimal_produksi:
- *                 type: integer
  *               keterangan:
  *                 type: string
  *     responses:
@@ -327,6 +318,163 @@ router.get(
   protect,
   restrictTo("staff", "junior_manager"),
   supplierController.getUniqueNamaSupply
+);
+
+/**
+ * @swagger
+ * /supplier/{supplierId}/add-supply:
+ *   post:
+ *     summary: Tambah nama_supply dan maksimal_produksi baru ke supplier
+ *     tags: [Supplier]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: supplierId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nama_supply
+ *               - maksimal_produksi
+ *             properties:
+ *               nama_supply:
+ *                 type: string
+ *               maksimal_produksi:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Supply berhasil ditambahkan ke supplier
+ *       404:
+ *         description: Supplier tidak ditemukan
+ *       500:
+ *         description: Gagal menambahkan supply
+ */
+router.post(
+  "/:supplierId/add-supply",
+  protect,
+  restrictTo("staff"),
+  supplierController.addSupplyToSupplier
+);
+
+/**
+ * @swagger
+ * /supplier/{supplierId}/supplies:
+ *   get:
+ *     summary: Ambil semua supply berdasarkan supplierId
+ *     tags: [Supplier]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: supplierId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Berhasil mengambil daftar supply
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   supplier_id:
+ *                     type: integer
+ *                   nama_supply:
+ *                     type: string
+ *                   maksimal_produksi:
+ *                     type: integer
+ *       500:
+ *         description: Gagal mengambil data supply
+ */
+router.get(
+  "/:supplierId/supplies",
+  protect,
+  restrictTo("staff", "junior_manager"),
+  supplierController.getSuppliesBySupplier
+);
+
+/**
+ * @swagger
+ * /supplier/supply/{id}:
+ *   put:
+ *     summary: Update data supply berdasarkan ID
+ *     tags: [Supplier]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nama_supply
+ *               - maksimal_produksi
+ *             properties:
+ *               nama_supply:
+ *                 type: string
+ *               maksimal_produksi:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Supply berhasil diperbarui
+ *       404:
+ *         description: Supply tidak ditemukan
+ *       500:
+ *         description: Gagal memperbarui supply
+ */
+router.put(
+  "/supply/:id",
+  protect,
+  restrictTo("staff"),
+  supplierController.updateSupply
+);
+
+/**
+ * @swagger
+ * /supplier/supply/{id}:
+ *   delete:
+ *     summary: Hapus data supply berdasarkan ID
+ *     tags: [Supplier]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Supply berhasil dihapus
+ *       404:
+ *         description: Supply tidak ditemukan
+ *       500:
+ *         description: Gagal menghapus supply
+ */
+router.delete(
+  "/supply/:id",
+  protect,
+  restrictTo("staff"),
+  supplierController.deleteSupply
 );
 
 module.exports = router;

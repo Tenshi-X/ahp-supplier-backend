@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2025 at 11:33 AM
+-- Generation Time: Jun 01, 2025 at 11:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -88,48 +88,6 @@ CREATE TABLE `nilaikriteriasupplier` (
   `nilai` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `nilaikriteriasupplier`
---
-
-INSERT INTO `nilaikriteriasupplier` (`id`, `supplierId`, `namaKriteria`, `nilai`) VALUES
-(8, 1, 'Kualitas', 4),
-(9, 1, 'Pengiriman', 3),
-(10, 1, 'Harga', 2),
-(11, 1, 'Kondisi finansial', 5),
-(12, 1, 'Kepatuhan prosedur', 1),
-(13, 1, 'Layanan perbaikan', 3),
-(14, 2, 'Kualitas', 2),
-(15, 2, 'Pengiriman', 5),
-(16, 2, 'Harga', 4),
-(17, 2, 'Kondisi finansial', 3),
-(18, 2, 'Kepatuhan prosedur', 1),
-(19, 2, 'Layanan perbaikan', 2),
-(20, 3, 'Kualitas', 5),
-(21, 3, 'Pengiriman', 4),
-(22, 3, 'Harga', 3),
-(23, 3, 'Kondisi finansial', 2),
-(24, 3, 'Kepatuhan prosedur', 1),
-(25, 3, 'Layanan perbaikan', 4),
-(26, 4, 'Kualitas', 3),
-(27, 4, 'Pengiriman', 1),
-(28, 4, 'Harga', 4),
-(29, 4, 'Kondisi finansial', 5),
-(30, 4, 'Kepatuhan prosedur', 2),
-(31, 4, 'Layanan perbaikan', 2),
-(32, 5, 'Kualitas', 4),
-(33, 5, 'Pengiriman', 2),
-(34, 5, 'Harga', 5),
-(35, 5, 'Kondisi finansial', 3),
-(36, 5, 'Kepatuhan prosedur', 1),
-(37, 5, 'Layanan perbaikan', 4),
-(38, 6, 'Kualitas', 2),
-(39, 6, 'Pengiriman', 3),
-(40, 6, 'Harga', 4),
-(41, 6, 'Kondisi finansial', 1),
-(42, 6, 'Kepatuhan prosedur', 5),
-(43, 6, 'Layanan perbaikan', 3);
-
 -- --------------------------------------------------------
 
 --
@@ -211,12 +169,6 @@ CREATE TABLE `supplier` (
 --
 
 INSERT INTO `supplier` (`id`, `nama`, `alamat`, `contact`, `nama_supply`, `maksimal_produksi`, `keterangan`) VALUES
-(1, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Sempak', 99, 'Ga Ada'),
-(2, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Kain Katun', 150, 'Tepat waktu dan responsif'),
-(3, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Benang', 200, 'Kualitas tinggi, harga bersaing'),
-(4, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Resleting', 120, 'Pernah delay sekali'),
-(5, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Kancing', 180, 'Fast response support'),
-(6, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Kain Drill', 100, 'Belum ada kerja sama sebelumnya'),
 (50, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Sempak', 118, 'Ga Ada'),
 (51, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Kain Katun', 178, 'Ga Ada'),
 (52, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Benang', 99, 'Ga Ada'),

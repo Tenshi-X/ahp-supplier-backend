@@ -80,6 +80,14 @@ router.get(
   reportController.getAllReports
 );
 
+router.get(
+  "/staffReport/:staff_id",
+  protect,
+  restrictTo("staff"),
+  reportController.getReportByIdStaff
+);
+
+
 /**
  * @swagger
  * /report/by-catatan/{catatan_supply_id}:

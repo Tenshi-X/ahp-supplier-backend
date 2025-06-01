@@ -11,18 +11,20 @@ exports.generateSupplierRankings = async (reportId, usedCriteria) => {
       const catatanSupplyId = reportResult[0].catatan_supply_id;
 
       // Step 2: Ambil jumlah_kebutuhan dari catatan_supply
-      const getJumlahKebutuhanQuery = `SELECT jumlah_kebutuhan FROM catatan_supply WHERE id = ?`;
+      const getCatatanSupplyQuery = `SELECT jumlah_kebutuhan, nama_kebutuhan FROM catatan_supply WHERE id = ?`;
       db.query(
-        getJumlahKebutuhanQuery,
+        getCatatanSupplyQuery,
         [catatanSupplyId],
         (err2, catatanResult) => {
           if (err2 || catatanResult.length === 0)
-            return reject("Gagal mengambil jumlah kebutuhan");
+            return reject("Gagal mengambil data catatan_supply");
 
           let sisaKebutuhan = catatanResult[0].jumlah_kebutuhan;
+          const namaSupply = catatanResult[0].nama_kebutuhan;
 
-          // Step 3: Ambil data supplier
-          db.query("SELECT * FROM supplier", (err3, suppliers) => {
+          // Step 3: Ambil data supplier dengan filter nama_supply sama
+          const getSupplierQuery = `SELECT * FROM supplier WHERE nama_supply = ?`;
+          db.query(getSupplierQuery, [namaSupply], (err3, suppliers) => {
             if (err3) return reject("Gagal mengambil supplier");
 
             const supplierIds = suppliers.map((s) => s.id);

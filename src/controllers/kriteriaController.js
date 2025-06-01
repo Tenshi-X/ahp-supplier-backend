@@ -2,11 +2,11 @@ const db = require("../models/db");
 
 // CREATE
 exports.createKriteria = (req, res) => {
-  const { kode, nama } = req.body;
+  const { kode, nama, pertimbangan } = req.body;
 
   db.query(
-    "INSERT INTO kriteria (kode, nama) VALUES (?, ?)",
-    [kode, nama],
+    "INSERT INTO kriteria (kode, nama, pertimbangan) VALUES (?, ?, ?)",
+    [kode, nama, pertimbangan],
     (err, result) => {
       if (err) {
         console.error(err);
@@ -45,11 +45,11 @@ exports.getKriteriaById = (req, res) => {
 // UPDATE
 exports.updateKriteria = (req, res) => {
   const { id } = req.params;
-  const { kode, nama } = req.body;
+  const { kode, nama , pertimbangan} = req.body;
 
   db.query(
-    "UPDATE kriteria SET kode = ?, nama = ? WHERE id = ?",
-    [kode, nama, id],
+    "UPDATE kriteria SET kode = ?, nama = ?, pertimbangan = ? WHERE id = ?",
+    [kode, nama,pertimbangan, id],
     (err, result) => {
       if (err)
         return res.status(500).json({ message: "Gagal memperbarui kriteria" });

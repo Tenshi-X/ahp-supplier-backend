@@ -62,24 +62,54 @@ exports.createReport = (req, res) => {
 };
 
 exports.getAllReports = (req, res) => {
-    const query = `
+  const query = `
       SELECT r.*, u.username, cs.nama_kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input
       FROM report r
       JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
       JOIN users u ON cs.staff_id = u.id
     `;
 
-    db.query(query, (err, results) => {
-      if (err)
-        return res.status(500).json({ message: "Gagal mengambil laporan" });
-      res.json(results);
-    });
-  };
+  db.query(query, (err, results) => {
+    if (err)
+      return res.status(500).json({ message: "Gagal mengambil laporan" });
+    res.json(results);
+  });
+};
 
-  exports.getReportByCatatanId = (req, res) => {
-    const { catatan_supply_id } = req.params;
+exports.getReportByIdStaff = (req, res) => {
+  const { staff_id } = req.params;
 
-    const query = `
+  const query = `
+    SELECT r.*, u.username, cs.nama_kebutuhan, cs.jumlah_kebutuhan, cs.tanggal AS tanggal_input
+    FROM report r
+    JOIN catatan_supply cs ON r.catatan_supply_id = cs.id
+    JOIN users u ON cs.staff_id = u.id
+    WHERE cs.staff_id = ?
+  `;
+
+  db.query(query, [staff_id], (err, results) => {
+    if (err) {
+      console.error("Error saat mengambil laporan berdasarkan staff_id:", err);
+      return res.status(500).json({
+        message:
+          "Terjadi kesalahan saat mengambil data laporan untuk staff ini",
+      });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        message: "Tidak ada laporan ditemukan untuk staff ini",
+      });
+    }
+
+    res.json(results);
+  });
+};
+
+exports.getReportByCatatanId = (req, res) => {
+  const { catatan_supply_id } = req.params;
+
+  const query = `
       SELECT r.*, cs.nama_kebutuhan, cs.jumlah_kebutuhan, u.username, cs.tanggal AS tanggal_input
       FROM report r
       JOIN catatan_supply cs ON r.catatan_supply_id = cs.id

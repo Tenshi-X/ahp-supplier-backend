@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2025 at 11:44 AM
+-- Generation Time: Jun 01, 2025 at 01:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,6 +49,67 @@ INSERT INTO `catatan_supply` (`id`, `nama_pemesan`, `no_hp`, `nama_kebutuhan`, `
 (5, 'gustian', '088888888', 'jokowi', 300, 6, '2025-06-01'),
 (6, 'gustian', '0888811111', 'Benang', 300, 6, '2025-06-01'),
 (7, 'gustian', '0883337774', 'Benang', 400, 6, '2025-06-01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `detail_supplier`
+--
+
+CREATE TABLE `detail_supplier` (
+  `id` int(11) NOT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `nama_supply` varchar(255) DEFAULT NULL,
+  `maksimal_produksi` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `detail_supplier`
+--
+
+INSERT INTO `detail_supplier` (`id`, `supplier_id`, `nama_supply`, `maksimal_produksi`) VALUES
+(1, 50, 'Sempak', 118),
+(7, 56, 'Sempak', 102),
+(13, 62, 'Sempak', 179),
+(19, 68, 'Sempak', 107),
+(25, 74, 'Sempak', 133),
+(31, 80, 'Sempak', 127),
+(64, 50, 'Besi Baja', 118),
+(65, 50, 'Aluminium Sheet', 130),
+(66, 50, 'Kabel Listrik', 95),
+(67, 50, 'Baut & Mur', 110),
+(68, 50, 'Oli Industri', 105),
+(69, 50, 'Pipa PVC', 125),
+(70, 56, 'Besi Baja', 102),
+(71, 56, 'Aluminium Sheet', 111),
+(72, 56, 'Kabel Listrik', 98),
+(73, 56, 'Baut & Mur', 120),
+(74, 56, 'Oli Industri', 101),
+(75, 56, 'Pipa PVC', 115),
+(76, 62, 'Besi Baja', 179),
+(77, 62, 'Aluminium Sheet', 140),
+(78, 62, 'Kabel Listrik', 138),
+(79, 62, 'Baut & Mur', 160),
+(80, 62, 'Oli Industri', 150),
+(81, 62, 'Pipa PVC', 155),
+(82, 68, 'Besi Baja', 107),
+(83, 68, 'Aluminium Sheet', 109),
+(84, 68, 'Kabel Listrik', 100),
+(85, 68, 'Baut & Mur', 105),
+(86, 68, 'Oli Industri', 108),
+(87, 68, 'Pipa PVC', 112),
+(88, 74, 'Besi Baja', 133),
+(89, 74, 'Aluminium Sheet', 135),
+(90, 74, 'Kabel Listrik', 120),
+(91, 74, 'Baut & Mur', 125),
+(92, 74, 'Oli Industri', 130),
+(93, 74, 'Pipa PVC', 128),
+(94, 80, 'Besi Baja', 127),
+(95, 80, 'Aluminium Sheet', 129),
+(96, 80, 'Kabel Listrik', 122),
+(97, 80, 'Baut & Mur', 135),
+(98, 80, 'Oli Industri', 126),
+(99, 80, 'Pipa PVC', 120);
 
 -- --------------------------------------------------------
 
@@ -159,8 +220,6 @@ CREATE TABLE `supplier` (
   `nama` varchar(100) NOT NULL,
   `alamat` text DEFAULT NULL,
   `contact` varchar(100) DEFAULT NULL,
-  `nama_supply` varchar(255) NOT NULL,
-  `maksimal_produksi` int(11) NOT NULL,
   `keterangan` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -168,43 +227,13 @@ CREATE TABLE `supplier` (
 -- Dumping data for table `supplier`
 --
 
-INSERT INTO `supplier` (`id`, `nama`, `alamat`, `contact`, `nama_supply`, `maksimal_produksi`, `keterangan`) VALUES
-(50, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Sempak', 118, 'Ga Ada'),
-(51, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Kain Katun', 178, 'Ga Ada'),
-(52, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Benang', 99, 'Ga Ada'),
-(53, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Resleting', 121, 'Ga Ada'),
-(54, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Kancing', 109, 'Ga Ada'),
-(55, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Kain Drill', 102, 'Ga Ada'),
-(56, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Sempak', 102, 'Tepat waktu dan responsif'),
-(57, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Kain Katun', 124, 'Tepat waktu dan responsif'),
-(58, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Benang', 116, 'Tepat waktu dan responsif'),
-(59, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Resleting', 130, 'Tepat waktu dan responsif'),
-(60, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Kancing', 102, 'Tepat waktu dan responsif'),
-(61, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Kain Drill', 161, 'Tepat waktu dan responsif'),
-(62, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Sempak', 179, 'Kualitas tinggi, harga bersaing'),
-(63, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Kain Katun', 94, 'Kualitas tinggi, harga bersaing'),
-(64, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Benang', 93, 'Kualitas tinggi, harga bersaing'),
-(65, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Resleting', 102, 'Kualitas tinggi, harga bersaing'),
-(66, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Kancing', 150, 'Kualitas tinggi, harga bersaing'),
-(67, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Kain Drill', 128, 'Kualitas tinggi, harga bersaing'),
-(68, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Sempak', 107, 'Pernah delay sekali'),
-(69, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Kain Katun', 193, 'Pernah delay sekali'),
-(70, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Benang', 85, 'Pernah delay sekali'),
-(71, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Resleting', 127, 'Pernah delay sekali'),
-(72, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Kancing', 180, 'Pernah delay sekali'),
-(73, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Kain Drill', 198, 'Pernah delay sekali'),
-(74, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Sempak', 133, 'Fast response support'),
-(75, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Kain Katun', 111, 'Fast response support'),
-(76, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Benang', 198, 'Fast response support'),
-(77, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Resleting', 95, 'Fast response support'),
-(78, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Kancing', 163, 'Fast response support'),
-(79, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Kain Drill', 91, 'Fast response support'),
-(80, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Sempak', 127, 'Belum ada kerja sama sebelumnya'),
-(81, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Kain Katun', 163, 'Belum ada kerja sama sebelumnya'),
-(82, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Benang', 113, 'Belum ada kerja sama sebelumnya'),
-(83, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Resleting', 116, 'Belum ada kerja sama sebelumnya'),
-(84, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Kancing', 163, 'Belum ada kerja sama sebelumnya'),
-(85, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Kain Drill', 149, 'Belum ada kerja sama sebelumnya');
+INSERT INTO `supplier` (`id`, `nama`, `alamat`, `contact`, `keterangan`) VALUES
+(50, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Ga Ada'),
+(56, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Tepat waktu dan responsif'),
+(62, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Kualitas tinggi, harga bersaing'),
+(68, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Pernah delay sekali'),
+(74, 'UD Tekstil Mandiri', 'Yogyakarta', '+6284234567893', 'Fast response support'),
+(80, 'CV Bintang Timur', 'Medan', '+6285234567894', 'Belum ada kerja sama sebelumnya');
 
 -- --------------------------------------------------------
 
@@ -314,6 +343,13 @@ ALTER TABLE `catatan_supply`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `detail_supplier`
+--
+ALTER TABLE `detail_supplier`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `supplier_id` (`supplier_id`);
+
+--
 -- Indexes for table `kriteria`
 --
 ALTER TABLE `kriteria`
@@ -372,6 +408,12 @@ ALTER TABLE `catatan_supply`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `detail_supplier`
+--
+ALTER TABLE `detail_supplier`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+
+--
 -- AUTO_INCREMENT for table `kriteria`
 --
 ALTER TABLE `kriteria`
@@ -416,6 +458,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `detail_supplier`
+--
+ALTER TABLE `detail_supplier`
+  ADD CONSTRAINT `detail_supplier_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `nilaikriteriasupplier`

@@ -154,14 +154,17 @@ exports.deleteNilaiKriteria = (req, res) => {
 };
 
 exports.getUniqueNamaSupply = (req, res) => {
-  db.query("SELECT DISTINCT nama_supply FROM supplier", (err, results) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Gagal mengambil data nama_supply" });
+  db.query(
+    "SELECT DISTINCT nama_supply FROM detail_supplier",
+    (err, results) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ message: "Gagal mengambil data nama_supply" });
+      }
+      res.json(results.map((row) => row.nama_supply));
     }
-    res.json(results.map((row) => row.nama_supply));
-  });
+  );
 };
 
 exports.addSupplyToSupplier = (req, res) => {
@@ -177,17 +180,9 @@ exports.addSupplyToSupplier = (req, res) => {
       if (results.length === 0)
         return res.status(404).json({ message: "Supplier tidak ditemukan" });
 
-      const supplier = results[0];
       db.query(
-        "INSERT INTO supplier (nama, alamat, contact, nama_supply, maksimal_produksi, keterangan) VALUES (?, ?, ?, ?, ?, ?)",
-        [
-          supplier.nama,
-          supplier.alamat,
-          supplier.contact,
-          nama_supply,
-          maksimal_produksi,
-          supplier.keterangan,
-        ],
+        "INSERT INTO detail_supplier (supplier_id, nama_supply, maksimal_produksi) VALUES (?, ?, ?)",
+        [supplierId, nama_supply, maksimal_produksi],
         (err2, result) => {
           if (err2)
             return res
@@ -203,12 +198,11 @@ exports.addSupplyToSupplier = (req, res) => {
   );
 };
 
-// READ all supply by supplier ID
 exports.getSuppliesBySupplier = (req, res) => {
   const { supplierId } = req.params;
 
   db.query(
-    "SELECT * FROM supplier WHERE supplier_id = ?",
+    "SELECT * FROM detail_supplier WHERE supplier_id = ?",
     [supplierId],
     (err, results) => {
       if (err)
@@ -218,13 +212,12 @@ exports.getSuppliesBySupplier = (req, res) => {
   );
 };
 
-// UPDATE specific supply row by ID
 exports.updateSupply = (req, res) => {
   const { id } = req.params;
   const { nama_supply, maksimal_produksi } = req.body;
 
   db.query(
-    "UPDATE supplier SET nama_supply = ?, maksimal_produksi = ? WHERE id = ?",
+    "UPDATE detail_supplier SET nama_supply = ?, maksimal_produksi = ? WHERE id = ?",
     [nama_supply, maksimal_produksi, id],
     (err, result) => {
       if (err)
@@ -234,11 +227,10 @@ exports.updateSupply = (req, res) => {
   );
 };
 
-// DELETE specific supply row by ID
 exports.deleteSupply = (req, res) => {
   const { id } = req.params;
 
-  db.query("DELETE FROM supplier WHERE id = ?", [id], (err, result) => {
+  db.query("DELETE FROM detail_supplier WHERE id = ?", [id], (err, result) => {
     if (err) return res.status(500).json({ message: "Gagal menghapus supply" });
     res.json({ message: "Supply berhasil dihapus" });
   });

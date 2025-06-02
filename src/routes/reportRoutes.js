@@ -3,6 +3,18 @@ const router = express.Router();
 const reportController = require("../controllers/reportController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
+router.post(
+  "/generate-rankSupplier",
+  protect,
+  restrictTo("staff"),
+  reportController.generateRankingFromSupplyData
+);
+router.post(
+  "/generate-ranking",
+  protect,
+  restrictTo("staff"),
+  reportController.generateRankingOnly
+);
 /**
  * @swagger
  * tags:
@@ -52,7 +64,7 @@ const { protect, restrictTo } = require("../middleware/authMiddleware");
  *         description: Gagal membuat laporan
  */
 router.post(
-  "/create",
+  "/create-report",
   protect,
   restrictTo("staff"),
   reportController.createReport
@@ -86,7 +98,6 @@ router.get(
   restrictTo("staff"),
   reportController.getReportByIdStaff
 );
-
 
 /**
  * @swagger
@@ -191,11 +202,6 @@ router.put(
  *       500:
  *         description: Gagal membuat PDF
  */
-router.get(
-  "/:report_id/pdf",
-  protect,
-  restrictTo("staff", "junior_manager"),
-  reportController.generatePDF
-);
+
 
 module.exports = router;

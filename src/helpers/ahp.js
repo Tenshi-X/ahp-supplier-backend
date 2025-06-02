@@ -23,12 +23,11 @@ exports.generateSupplierRankings = async (reportId, usedCriteria) => {
           const namaSupply = catatanResult[0].nama_kebutuhan;
 
           // Step 3: Ambil data supplier dengan filter nama_supply sama
-          const getSupplierQuery = `SELECT * FROM supplier WHERE nama_supply = ?`;
+          const getSupplierQuery = `SELECT * FROM detail_supplier ds JOIN supplier s ON ds.supplier_id = s.id WHERE ds.nama_supply = ?`;
           db.query(getSupplierQuery, [namaSupply], (err3, suppliers) => {
-            if (err3) return reject("Gagal mengambil supplier");
+            if (err3) return reject("Gagal mengambil supplier bjir");
 
             const supplierIds = suppliers.map((s) => s.id);
-            console.log(supplierIds);
 
             // Step 4: Ambil nilai kriteria supplier
             const getKriteriaSupplierQuery = `
@@ -40,7 +39,6 @@ exports.generateSupplierRankings = async (reportId, usedCriteria) => {
               (err4, nilaiKriteriaRows) => {
                 if (err4)
                   return reject("Gagal mengambil nilai kriteria supplier");
-
                 const nilaiPerSupplier = {};
                 suppliers.forEach((s) => (nilaiPerSupplier[s.id] = {}));
                 nilaiKriteriaRows.forEach((row) => {

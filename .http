@@ -1,8 +1,4 @@
 ### Login
-POST http://localhost:5000/api/auth/login
-Content-Type: application/json
-
-{
-  "username": "seva",
-  "password": "gustianjawa"
-}
+### Get unique nama_supply
+GET http://localhost:5000/api/supplier/nilai-kriteria
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nywicm9sZSI6InN0YWZmIiwiaWF0IjoxNzQ4Nzk3NzM5LCJleHAiOjE3NDg4ODQxMzl9.DOtvjSUEauBZiM47tKtq3IA30P7yfq4uXowN_zQZVyg

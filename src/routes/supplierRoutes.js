@@ -70,6 +70,26 @@ router.get(
   restrictTo("staff", "junior_manager"),
   supplierController.getAllSuppliers
 );
+/**
+ * @swagger
+ * /supplier/nama-supply:
+ *   get:
+ *     summary: Ambil semua nama_supply unik
+ *     tags: [Supplier]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Daftar nama_supply unik
+ *       500:
+ *         description: Gagal mengambil data
+ */
+router.get(
+  "/nama-supply",
+  protect,
+  restrictTo("staff", "junior_manager"),
+  supplierController.getUniqueNamaSupply
+);
 
 /**
  * @swagger
@@ -297,27 +317,6 @@ router.delete(
   protect,
   restrictTo("staff"),
   supplierController.deleteNilaiKriteria
-);
-
-/**
- * @swagger
- * /supplier/nama-supply:
- *   get:
- *     summary: Ambil semua nama_supply unik
- *     tags: [Supplier]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Daftar nama_supply unik
- *       500:
- *         description: Gagal mengambil data
- */
-router.get(
-  "/nama-supply",
-  protect,
-  restrictTo("staff", "junior_manager"),
-  supplierController.getUniqueNamaSupply
 );
 
 /**

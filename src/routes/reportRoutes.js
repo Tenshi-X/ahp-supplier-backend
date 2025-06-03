@@ -3,24 +3,24 @@ const router = express.Router();
 const reportController = require("../controllers/reportController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
-router.post(
-  "/generate-rankSupplier",
-  protect,
-  restrictTo("staff"),
-  reportController.generateRankingFromSupplyData
-);
-router.post(
-  "/generate-ranking",
-  protect,
-  restrictTo("staff"),
-  reportController.generateRankingOnly
-);
 /**
  * @swagger
  * tags:
  *   name: Laporan
  *   description: Manajemen laporan pengadaan dan proses AHP
  */
+router.post(
+  "/generate_rankSupplier",
+  protect,
+  restrictTo("staff"),
+  reportController.generateRanking
+);
+router.post(
+  "/generate_rankCatatan",
+  protect,
+  restrictTo("staff"),
+  reportController.generateRankingFromCatatan
+);
 
 /**
  * @swagger
@@ -85,6 +85,14 @@ router.post(
  *       500:
  *         description: Gagal mengambil laporan
  */
+
+router.get(
+  "/:report_id/pdf-status",
+  protect,
+  restrictTo("staff"),
+  reportController.checkPDFStatus
+);
+
 router.get(
   "/",
   protect,
@@ -92,12 +100,6 @@ router.get(
   reportController.getAllReports
 );
 
-router.get(
-  "/staffReport/:staff_id",
-  protect,
-  restrictTo("staff"),
-  reportController.getReportByIdStaff
-);
 
 /**
  * @swagger
@@ -127,6 +129,13 @@ router.get(
   "/by-catatan/:catatan_supply_id",
   protect,
   reportController.getReportByCatatanId
+);
+
+router.get(
+  "/staffReport/:staff_id",
+  protect,
+  restrictTo("staff"),
+  reportController.getReportByIdStaff
 );
 
 /**
@@ -202,6 +211,5 @@ router.put(
  *       500:
  *         description: Gagal membuat PDF
  */
-
 
 module.exports = router;

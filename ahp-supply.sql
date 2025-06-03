@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2025 at 01:34 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jun 03, 2025 at 07:59 PM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 8.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,54 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ahp_results`
+--
+
+CREATE TABLE `ahp_results` (
+  `id` bigint(20) NOT NULL,
+  `session_id` bigint(20) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `final_score` decimal(10,6) DEFAULT NULL,
+  `ranking_position` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `ahp_results`
+--
+
+INSERT INTO `ahp_results` (`id`, `session_id`, `supplier_id`, `final_score`, `ranking_position`) VALUES
+(91, 17, 50, '0.166667', 1),
+(92, 17, 56, '0.166667', 2),
+(93, 17, 62, '0.166667', 3),
+(94, 17, 68, '0.166667', 4),
+(95, 17, 74, '0.166667', 5),
+(96, 17, 80, '0.166667', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ahp_sessions`
+--
+
+CREATE TABLE `ahp_sessions` (
+  `id` bigint(20) NOT NULL,
+  `nama_supply` varchar(255) NOT NULL,
+  `status` enum('draft','completed') DEFAULT 'draft',
+  `consistency_ratio` decimal(10,6) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `ahp_sessions`
+--
+
+INSERT INTO `ahp_sessions` (`id`, `nama_supply`, `status`, `consistency_ratio`, `created_at`, `updated_at`) VALUES
+(17, 'Besi Baja', 'completed', NULL, '2025-06-03 17:55:51', '2025-06-03 17:55:51');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `catatan_supply`
 --
 
@@ -35,20 +83,41 @@ CREATE TABLE `catatan_supply` (
   `jumlah_kebutuhan` int(11) NOT NULL,
   `staff_id` int(11) NOT NULL,
   `tanggal` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `catatan_supply`
 --
 
 INSERT INTO `catatan_supply` (`id`, `nama_pemesan`, `no_hp`, `nama_kebutuhan`, `jumlah_kebutuhan`, `staff_id`, `tanggal`) VALUES
-(1, 'admin2', '098127127', 'jamur', 21, 7, '2025-06-01'),
-(2, 'gustian', '08888', 'mur', 200, 6, '2025-06-01'),
-(3, 'gustian', '0888888', 'mur', 300, 6, '2025-06-01'),
-(4, 'gustian', '088447777', 'obeng', 300, 6, '2025-06-01'),
-(5, 'gustian', '088888888', 'jokowi', 300, 6, '2025-06-01'),
-(6, 'gustian', '0888811111', 'Benang', 300, 6, '2025-06-01'),
-(7, 'gustian', '0883337774', 'Benang', 400, 6, '2025-06-01');
+(42, 'a', 'a', 'Besi Baja', 1, 7, '2025-06-04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `criteria_comparisons`
+--
+
+CREATE TABLE `criteria_comparisons` (
+  `id` bigint(20) NOT NULL,
+  `session_id` bigint(20) DEFAULT NULL,
+  `criteria_a_id` int(11) DEFAULT NULL,
+  `criteria_b_id` int(11) DEFAULT NULL,
+  `comparison_value` decimal(10,6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `criteria_weights`
+--
+
+CREATE TABLE `criteria_weights` (
+  `id` bigint(20) NOT NULL,
+  `session_id` bigint(20) DEFAULT NULL,
+  `criteria_id` int(11) DEFAULT NULL,
+  `weight_value` decimal(10,6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -61,7 +130,7 @@ CREATE TABLE `detail_supplier` (
   `supplier_id` int(11) DEFAULT NULL,
   `nama_supply` varchar(255) DEFAULT NULL,
   `maksimal_produksi` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `detail_supplier`
@@ -79,7 +148,7 @@ INSERT INTO `detail_supplier` (`id`, `supplier_id`, `nama_supply`, `maksimal_pro
 (66, 50, 'Kabel Listrik', 95),
 (67, 50, 'Baut & Mur', 110),
 (68, 50, 'Oli Industri', 105),
-(69, 50, 'Pipa PVC', 125),
+(69, 50, 'Pipa PVC', 126),
 (70, 56, 'Besi Baja', 102),
 (71, 56, 'Aluminium Sheet', 111),
 (72, 56, 'Kabel Listrik', 98),
@@ -122,7 +191,7 @@ CREATE TABLE `kriteria` (
   `kode` varchar(50) NOT NULL,
   `nama` varchar(100) NOT NULL,
   `pertimbangan` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `kriteria`
@@ -147,7 +216,19 @@ CREATE TABLE `nilaikriteriasupplier` (
   `supplierId` int(11) NOT NULL,
   `namaKriteria` varchar(100) NOT NULL,
   `nilai` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `nilaikriteriasupplier`
+--
+
+INSERT INTO `nilaikriteriasupplier` (`id`, `supplierId`, `namaKriteria`, `nilai`) VALUES
+(44, 50, 'Kualitas', 12),
+(45, 50, 'Pengiriman', 12),
+(46, 50, 'Harga', 12),
+(47, 50, 'Kondisi finansial', 12),
+(48, 50, 'Kepatuhan prosedur', 12),
+(49, 50, 'Layanan perbaikan', 12);
 
 -- --------------------------------------------------------
 
@@ -162,20 +243,7 @@ CREATE TABLE `rankingsuppliers` (
   `nama_supply` varchar(255) NOT NULL,
   `ranking` int(11) NOT NULL,
   `alokasi_kebutuhan` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `rankingsuppliers`
---
-
-INSERT INTO `rankingsuppliers` (`id`, `reportId`, `supplierName`, `nama_supply`, `ranking`, `alokasi_kebutuhan`) VALUES
-(2, 9, 'CV Makmur Jaya', 'Benang', 1, 200),
-(3, 10, 'CV Makmur Jaya', 'Benang', 1, 200),
-(4, 10, 'PT Jokowi Boti', 'Benang', 2, 200),
-(5, 10, 'PT Sinar Terang Abadi', 'Benang', 3, 0),
-(6, 10, 'PT Laju Prima', 'Benang', 4, 0),
-(7, 10, 'UD Tekstil Mandiri', 'Benang', 5, 0),
-(8, 10, 'CV Bintang Timur', 'Benang', 6, 0);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -190,24 +258,9 @@ CREATE TABLE `report` (
   `catatan_validasi` text DEFAULT NULL,
   `status` enum('disetujui','ditolak','menunggu') DEFAULT 'menunggu',
   `tanggal_laporan` date NOT NULL,
-  `approved_by` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `report`
---
-
-INSERT INTO `report` (`id`, `catatan_supply_id`, `file_path`, `catatan_validasi`, `status`, `tanggal_laporan`, `approved_by`) VALUES
-(1, 1, '', 'ga ada', 'menunggu', '2025-06-01', NULL),
-(2, 2, '', 'mantap', 'menunggu', '2025-06-01', NULL),
-(3, 2, '', 'mantap', 'menunggu', '2025-06-01', NULL),
-(4, 2, '', 'mantap', 'menunggu', '2025-06-01', NULL),
-(5, 3, '', 'luar biasa', 'menunggu', '2025-06-01', NULL),
-(6, 4, '', 'harus besok', 'menunggu', '2025-06-01', NULL),
-(7, 5, '', 'harus besok', 'menunggu', '2025-06-01', NULL),
-(8, 5, '', 'harus besok', 'menunggu', '2025-06-01', NULL),
-(9, 6, '', 'cccc', 'menunggu', '2025-06-01', NULL),
-(10, 7, '', 'mantap sekali', 'menunggu', '2025-06-01', NULL);
+  `approved_by` int(11) DEFAULT NULL,
+  `ahp_session_id` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -221,7 +274,7 @@ CREATE TABLE `supplier` (
   `alamat` text DEFAULT NULL,
   `contact` varchar(100) DEFAULT NULL,
   `keterangan` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `supplier`
@@ -238,6 +291,21 @@ INSERT INTO `supplier` (`id`, `nama`, `alamat`, `contact`, `keterangan`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `supplier_comparisons`
+--
+
+CREATE TABLE `supplier_comparisons` (
+  `id` bigint(20) NOT NULL,
+  `session_id` bigint(20) DEFAULT NULL,
+  `criteria_id` int(11) DEFAULT NULL,
+  `supplier_a_id` int(11) DEFAULT NULL,
+  `supplier_b_id` int(11) DEFAULT NULL,
+  `comparison_value` decimal(10,6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `usedcriteria`
 --
 
@@ -246,68 +314,7 @@ CREATE TABLE `usedcriteria` (
   `reportId` int(11) NOT NULL,
   `criteriaName` varchar(100) NOT NULL,
   `criteriaValue` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `usedcriteria`
---
-
-INSERT INTO `usedcriteria` (`id`, `reportId`, `criteriaName`, `criteriaValue`) VALUES
-(1, 1, 'Jarak', 0),
-(2, 2, 'Kualitas', 1),
-(3, 2, 'Pengiriman', 2),
-(4, 2, 'Harga', 3),
-(5, 2, 'Kondisi finansial', 4),
-(6, 2, 'Kepatuhan prosedur', 5),
-(7, 2, 'Layanan perbaikan', 6),
-(8, 3, 'Kualitas', 1),
-(9, 3, 'Pengiriman', 2),
-(10, 3, 'Harga', 3),
-(11, 3, 'Kondisi finansial', 4),
-(12, 3, 'Kepatuhan prosedur', 5),
-(13, 3, 'Layanan perbaikan', 6),
-(14, 4, 'Kualitas', 1),
-(15, 4, 'Pengiriman', 2),
-(16, 4, 'Harga', 3),
-(17, 4, 'Kondisi finansial', 4),
-(18, 4, 'Kepatuhan prosedur', 5),
-(19, 4, 'Layanan perbaikan', 6),
-(20, 5, 'Kualitas', 1),
-(21, 5, 'Pengiriman', 2),
-(22, 5, 'Harga', 3),
-(23, 5, 'Kondisi finansial', 5),
-(24, 5, 'Kepatuhan prosedur', 4),
-(25, 5, 'Layanan perbaikan', 6),
-(26, 6, 'Kualitas', 2),
-(27, 6, 'Pengiriman', 1),
-(28, 6, 'Harga', 3),
-(29, 6, 'Kondisi finansial', 4),
-(30, 6, 'Kepatuhan prosedur', 5),
-(31, 6, 'Layanan perbaikan', 6),
-(32, 7, 'Kualitas', 2),
-(33, 7, 'Pengiriman', 1),
-(34, 7, 'Harga', 3),
-(35, 7, 'Kondisi finansial', 4),
-(36, 7, 'Kepatuhan prosedur', 5),
-(37, 7, 'Layanan perbaikan', 6),
-(38, 8, 'Kualitas', 2),
-(39, 8, 'Pengiriman', 1),
-(40, 8, 'Harga', 3),
-(41, 8, 'Kondisi finansial', 4),
-(42, 8, 'Kepatuhan prosedur', 5),
-(43, 8, 'Layanan perbaikan', 6),
-(44, 9, 'Kualitas', 1),
-(45, 9, 'Pengiriman', 2),
-(46, 9, 'Harga', 3),
-(47, 9, 'Kondisi finansial', 4),
-(48, 9, 'Kepatuhan prosedur', 5),
-(49, 9, 'Layanan perbaikan', 6),
-(50, 10, 'Kualitas', 2),
-(51, 10, 'Harga', 3),
-(52, 10, 'Pengiriman', 1),
-(53, 10, 'Kondisi finansial', 4),
-(54, 10, 'Kepatuhan prosedur', 5),
-(55, 10, 'Layanan perbaikan', 6);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -321,7 +328,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
   `role` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
@@ -337,10 +344,41 @@ INSERT INTO `users` (`id`, `username`, `password`, `email`, `role`) VALUES
 --
 
 --
+-- Indexes for table `ahp_results`
+--
+ALTER TABLE `ahp_results`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `supplier_id` (`supplier_id`),
+  ADD KEY `fk_session` (`session_id`);
+
+--
+-- Indexes for table `ahp_sessions`
+--
+ALTER TABLE `ahp_sessions`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `catatan_supply`
 --
 ALTER TABLE `catatan_supply`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `criteria_comparisons`
+--
+ALTER TABLE `criteria_comparisons`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `session_id` (`session_id`),
+  ADD KEY `criteria_a_id` (`criteria_a_id`),
+  ADD KEY `criteria_ab_id` (`criteria_b_id`);
+
+--
+-- Indexes for table `criteria_weights`
+--
+ALTER TABLE `criteria_weights`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_sessions` (`session_id`),
+  ADD KEY `fk_kriteria` (`criteria_id`);
 
 --
 -- Indexes for table `detail_supplier`
@@ -375,13 +413,24 @@ ALTER TABLE `rankingsuppliers`
 ALTER TABLE `report`
   ADD PRIMARY KEY (`id`),
   ADD KEY `catatan_supply_id` (`catatan_supply_id`),
-  ADD KEY `approved_by` (`approved_by`);
+  ADD KEY `approved_by` (`approved_by`),
+  ADD KEY `idx_report_ahp_session` (`ahp_session_id`);
 
 --
 -- Indexes for table `supplier`
 --
 ALTER TABLE `supplier`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `supplier_comparisons`
+--
+ALTER TABLE `supplier_comparisons`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `supplier_a_id` (`supplier_a_id`),
+  ADD KEY `supplier_b_id` (`supplier_b_id`),
+  ADD KEY `criteria_id` (`criteria_id`),
+  ADD KEY `sessions_id` (`session_id`);
 
 --
 -- Indexes for table `usedcriteria`
@@ -402,16 +451,40 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `ahp_results`
+--
+ALTER TABLE `ahp_results`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+
+--
+-- AUTO_INCREMENT for table `ahp_sessions`
+--
+ALTER TABLE `ahp_sessions`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
 -- AUTO_INCREMENT for table `catatan_supply`
 --
 ALTER TABLE `catatan_supply`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+
+--
+-- AUTO_INCREMENT for table `criteria_comparisons`
+--
+ALTER TABLE `criteria_comparisons`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `criteria_weights`
+--
+ALTER TABLE `criteria_weights`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `detail_supplier`
 --
 ALTER TABLE `detail_supplier`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT for table `kriteria`
@@ -423,31 +496,37 @@ ALTER TABLE `kriteria`
 -- AUTO_INCREMENT for table `nilaikriteriasupplier`
 --
 ALTER TABLE `nilaikriteriasupplier`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `rankingsuppliers`
 --
 ALTER TABLE `rankingsuppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=171;
 
 --
 -- AUTO_INCREMENT for table `report`
 --
 ALTER TABLE `report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `supplier`
 --
 ALTER TABLE `supplier`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+
+--
+-- AUTO_INCREMENT for table `supplier_comparisons`
+--
+ALTER TABLE `supplier_comparisons`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `usedcriteria`
 --
 ALTER TABLE `usedcriteria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=203;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -458,6 +537,28 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `ahp_results`
+--
+ALTER TABLE `ahp_results`
+  ADD CONSTRAINT `fk_session` FOREIGN KEY (`session_id`) REFERENCES `ahp_sessions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `supplier_id` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `criteria_comparisons`
+--
+ALTER TABLE `criteria_comparisons`
+  ADD CONSTRAINT `criteria_a_id` FOREIGN KEY (`criteria_a_id`) REFERENCES `kriteria` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `criteria_ab_id` FOREIGN KEY (`criteria_b_id`) REFERENCES `kriteria` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `session_id` FOREIGN KEY (`session_id`) REFERENCES `ahp_sessions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `criteria_weights`
+--
+ALTER TABLE `criteria_weights`
+  ADD CONSTRAINT `fk_kriteria` FOREIGN KEY (`criteria_id`) REFERENCES `kriteria` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_sessions` FOREIGN KEY (`session_id`) REFERENCES `ahp_sessions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_supplier`
@@ -482,7 +583,17 @@ ALTER TABLE `rankingsuppliers`
 --
 ALTER TABLE `report`
   ADD CONSTRAINT `report_ibfk_1` FOREIGN KEY (`catatan_supply_id`) REFERENCES `catatan_supply` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `report_ibfk_3` FOREIGN KEY (`ahp_session_id`) REFERENCES `ahp_sessions` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `supplier_comparisons`
+--
+ALTER TABLE `supplier_comparisons`
+  ADD CONSTRAINT `criteria_id` FOREIGN KEY (`criteria_id`) REFERENCES `kriteria` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `sessions_id` FOREIGN KEY (`session_id`) REFERENCES `ahp_sessions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `supplier_a_id` FOREIGN KEY (`supplier_a_id`) REFERENCES `supplier` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `supplier_b_id` FOREIGN KEY (`supplier_b_id`) REFERENCES `supplier` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `usedcriteria`

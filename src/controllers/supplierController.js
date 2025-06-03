@@ -33,6 +33,20 @@ exports.getAllSuppliers = (req, res) => {
     }
   );
 };
+exports.getSuppliersBySupply = (req, res) => {
+  const { nama_supply } = req.params;
+  db.query(
+    "SELECT * FROM detail_supplier ds JOIN supplier s ON ds.supplier_id = s.id WHERE ds.nama_supply = ?",
+    [nama_supply],
+    (err, results) => {
+      if (err)
+        return res.status(500).json({ message: "Gagal mengambil supplier" });
+      if (results.length === 0)
+        return res.status(404).json({ message: "Supplier tidak ditemukan" });
+      res.json(results);
+    }
+  );
+};
 
 // READ supplier by ID
 exports.getSupplierById = (req, res) => {

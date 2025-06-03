@@ -85,6 +85,13 @@ router.get(
  *         description: Gagal mengambil data
  */
 router.get(
+  "/:nama_supply/getBySupply",
+  protect,
+  restrictTo("staff", "junior_manager"),
+  supplierController.getSuppliersBySupply
+);
+
+router.get(
   "/nama-supply",
   protect,
   restrictTo("staff", "junior_manager"),

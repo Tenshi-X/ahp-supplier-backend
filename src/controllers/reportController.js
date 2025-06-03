@@ -314,7 +314,7 @@ const generatePDFForReportOptimized = async (reportId, sessionId) => {
   FROM ahp_results ar
   JOIN supplier s ON ar.supplier_id = s.id
   LEFT JOIN rankingsuppliers rs 
-    ON ar.supplier_id = rs.supplier_id AND rs.report_id = ?
+    ON ar.supplier_id = rs.id AND rs.reportId = ?
   WHERE ar.session_id = ?
   ORDER BY ar.ranking_position ASC
 `;
@@ -418,7 +418,7 @@ const generatePDFForReportOptimized = async (reportId, sessionId) => {
       doc.end();
 
       stream.on("finish", () => {
-        const fileURL = `${process.env.BASE_URL}/pdf/${filename}`;
+        const fileURL = `${process.env.BASE_URL}/public/pdf/${filename}`;
         resolve(fileURL);
       });
 

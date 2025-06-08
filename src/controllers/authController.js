@@ -11,12 +11,12 @@ exports.login = (req, res) => {
     async (err, results) => {
       if (err) return res.status(500).json({ message: "Server error" });
       if (results.length === 0)
-        return res.status(401).json({ message: "User not found" });
+        return res.status(401).json({ message: "Pengguna Tidak Ditemukan" });
 
       const user = results[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch)
-        return res.status(401).json({ message: "Invalid credentials" });
+        return res.status(401).json({ message: "Username / Password " });
 
       const token = jwt.sign(
         { id: user.id, role: user.role },
@@ -35,12 +35,20 @@ exports.register = (req, res) => {
   const { username, password, email, role } = req.body;
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) return res.status(500).json({ message: "Hashing error" });
+
     db.query(
       "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
       [username, hash, email, role],
       (err, result) => {
-        if (err) return res.status(500).json({ message: "Register failed" });
-        res.json({ message: "User registered" });
+        if (err) {
+          if (err.code === "ER_DUP_ENTRY") {
+            if (err.sqlMessage.includes("email")) {
+              return res.status(400).json({ message: "Email sudah terdaftar" });
+            }
+          }
+          return res.status(500).json({ message: "Pendaftaran gagal" });
+        }
+        res.json({ message: "Pengguna Telah Terdaftar" });
       }
     );
   });

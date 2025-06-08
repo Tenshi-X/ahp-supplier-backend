@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 03, 2025 at 07:59 PM
+-- Generation Time: Jun 08, 2025 at 05:20 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.10
 
@@ -40,12 +40,9 @@ CREATE TABLE `ahp_results` (
 --
 
 INSERT INTO `ahp_results` (`id`, `session_id`, `supplier_id`, `final_score`, `ranking_position`) VALUES
-(91, 17, 50, '0.166667', 1),
-(92, 17, 56, '0.166667', 2),
-(93, 17, 62, '0.166667', 3),
-(94, 17, 68, '0.166667', 4),
-(95, 17, 74, '0.166667', 5),
-(96, 17, 80, '0.166667', 6);
+(184, 32, 68, '0.166667', 4),
+(185, 32, 74, '0.166667', 5),
+(186, 32, 80, '0.166667', 6);
 
 -- --------------------------------------------------------
 
@@ -67,7 +64,9 @@ CREATE TABLE `ahp_sessions` (
 --
 
 INSERT INTO `ahp_sessions` (`id`, `nama_supply`, `status`, `consistency_ratio`, `created_at`, `updated_at`) VALUES
-(17, 'Besi Baja', 'completed', NULL, '2025-06-03 17:55:51', '2025-06-03 17:55:51');
+(17, 'Besi Baja', 'completed', NULL, '2025-06-03 17:55:51', '2025-06-03 17:55:51'),
+(31, 'Besi Baja', 'completed', '0.008797', '2025-06-08 03:13:25', '2025-06-08 03:13:25'),
+(32, 'Besi Baja', 'completed', '0.022765', '2025-06-08 03:15:54', '2025-06-08 03:15:54');
 
 -- --------------------------------------------------------
 
@@ -90,7 +89,22 @@ CREATE TABLE `catatan_supply` (
 --
 
 INSERT INTO `catatan_supply` (`id`, `nama_pemesan`, `no_hp`, `nama_kebutuhan`, `jumlah_kebutuhan`, `staff_id`, `tanggal`) VALUES
-(42, 'a', 'a', 'Besi Baja', 1, 7, '2025-06-04');
+(42, 'a', 'a', 'Besi Baja', 1, 7, '2025-06-04'),
+(43, 'Teddy', '12', 'Besi Baja', 332, 10, '2025-06-08'),
+(44, 'Teddy', '52', 'Besi Baja', 444, 10, '2025-06-08'),
+(45, 'teddy', '12', 'Sempak', 444, 10, '2025-06-08'),
+(46, 'aa', '1', 'Sempak', 121, 10, '2025-06-08'),
+(47, 'aa', '12', 'Sempak', 111, 10, '2025-06-08'),
+(48, 'aa', '12', 'Sempak', 111, 10, '2025-06-08'),
+(49, 'aa', '1', 'Besi Baja', 121, 10, '2025-06-08'),
+(50, 'a', '1', 'Baut & Mur', 122, 10, '2025-06-08'),
+(51, 'a', '1', 'Aluminium Sheet', 112, 10, '2025-06-08'),
+(52, 'teddy', '121', 'Aluminium Sheet', 432, 10, '2025-06-08'),
+(53, 'aas', '1', 'Aluminium Sheet', 111, 10, '2025-06-08'),
+(54, '1', '1', 'Baut & Mur', 1, 10, '2025-06-08'),
+(55, '1', '1', 'Aluminium Sheet', 1, 10, '2025-06-08'),
+(56, 'aa', '1', 'Besi Baja', 111, 10, '2025-06-08'),
+(57, 'a', '1', 'Besi Baja', 122, 10, '2025-06-08');
 
 -- --------------------------------------------------------
 
@@ -137,12 +151,6 @@ CREATE TABLE `detail_supplier` (
 --
 
 INSERT INTO `detail_supplier` (`id`, `supplier_id`, `nama_supply`, `maksimal_produksi`) VALUES
-(1, 50, 'Sempak', 118),
-(7, 56, 'Sempak', 102),
-(13, 62, 'Sempak', 179),
-(19, 68, 'Sempak', 107),
-(25, 74, 'Sempak', 133),
-(31, 80, 'Sempak', 127),
 (64, 50, 'Besi Baja', 118),
 (65, 50, 'Aluminium Sheet', 130),
 (66, 50, 'Kabel Listrik', 95),
@@ -239,6 +247,7 @@ INSERT INTO `nilaikriteriasupplier` (`id`, `supplierId`, `namaKriteria`, `nilai`
 CREATE TABLE `rankingsuppliers` (
   `id` int(11) NOT NULL,
   `reportId` int(11) NOT NULL,
+  `session_id` bigint(20) NOT NULL,
   `supplierName` varchar(100) NOT NULL,
   `nama_supply` varchar(255) NOT NULL,
   `ranking` int(11) NOT NULL,
@@ -281,7 +290,7 @@ CREATE TABLE `supplier` (
 --
 
 INSERT INTO `supplier` (`id`, `nama`, `alamat`, `contact`, `keterangan`) VALUES
-(50, 'PT Jokowi Boti', 'Solo', '+6285747255088', 'Ga Ada'),
+(50, 'PT Save Raja Ampat', 'Raja Ampat', '+6285747255088', 'Pengiriman Cepat'),
 (56, 'PT Sinar Terang Abadi', 'Jakarta', '+6281234567890', 'Tepat waktu dan responsif'),
 (62, 'CV Makmur Jaya', 'Bandung', '+6282234567891', 'Kualitas tinggi, harga bersaing'),
 (68, 'PT Laju Prima', 'Surabaya', '+6283234567892', 'Pernah delay sekali'),
@@ -337,7 +346,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `role`) VALUES
 (6, 'gustian', '$2b$10$yrIMsRdd7N94F.Ac2PEqnefF2YRH4pcrOyx8Vqgcckraqi.8wMf2e', 'gustian1234@gmail.com', 'staff'),
 (7, 'admin2', '$2b$10$mg.qcK2AYEcPkG6LSby9MuGuf8qwoWPbaTn4kxz0ff.iiSyKy64WC', 'admin2@gmail.com', 'staff'),
-(9, 'manager', '$2b$10$755QRVyin5FT9UE7M2eFI.Z100WOemmag8g0HQI0bD82iRJqzrzmu', 'managerasik@gmail.com', 'junior_manager');
+(9, 'manager', '$2b$10$755QRVyin5FT9UE7M2eFI.Z100WOemmag8g0HQI0bD82iRJqzrzmu', 'managerasik@gmail.com', 'junior_manager'),
+(10, 'PRABOWO', '$2b$10$ronmAydZrVVZpn750X526us2U9A0znMkEZEzmadAVS7wef2Tk3D3m', 'managerasik2@gmail.com', 'staff');
 
 --
 -- Indexes for dumped tables
@@ -405,7 +415,8 @@ ALTER TABLE `nilaikriteriasupplier`
 --
 ALTER TABLE `rankingsuppliers`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `reportId` (`reportId`);
+  ADD KEY `reportId` (`reportId`),
+  ADD KEY `fk_session_id` (`session_id`);
 
 --
 -- Indexes for table `report`
@@ -454,31 +465,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `ahp_results`
 --
 ALTER TABLE `ahp_results`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=187;
 
 --
 -- AUTO_INCREMENT for table `ahp_sessions`
 --
 ALTER TABLE `ahp_sessions`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `catatan_supply`
 --
 ALTER TABLE `catatan_supply`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `criteria_comparisons`
 --
 ALTER TABLE `criteria_comparisons`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT for table `criteria_weights`
 --
 ALTER TABLE `criteria_weights`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `detail_supplier`
@@ -502,13 +513,13 @@ ALTER TABLE `nilaikriteriasupplier`
 -- AUTO_INCREMENT for table `rankingsuppliers`
 --
 ALTER TABLE `rankingsuppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=171;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=261;
 
 --
 -- AUTO_INCREMENT for table `report`
 --
 ALTER TABLE `report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `supplier`
@@ -520,19 +531,19 @@ ALTER TABLE `supplier`
 -- AUTO_INCREMENT for table `supplier_comparisons`
 --
 ALTER TABLE `supplier_comparisons`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1081;
 
 --
 -- AUTO_INCREMENT for table `usedcriteria`
 --
 ALTER TABLE `usedcriteria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=203;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=293;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -576,6 +587,7 @@ ALTER TABLE `nilaikriteriasupplier`
 -- Constraints for table `rankingsuppliers`
 --
 ALTER TABLE `rankingsuppliers`
+  ADD CONSTRAINT `fk_session_id` FOREIGN KEY (`session_id`) REFERENCES `ahp_sessions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `rankingsuppliers_ibfk_1` FOREIGN KEY (`reportId`) REFERENCES `report` (`id`) ON DELETE CASCADE;
 
 --

@@ -150,6 +150,10 @@ exports.createReport = async (req, res) => {
     }
 
     // 6. Insert criteria comparisons
+    console.log("Step 4: Cek criteria_comparisons =", criteria_comparisons);
+    console.log("Step 4.1: Apakah array?", Array.isArray(criteria_comparisons));
+    console.log("Step 4.2: Length =", criteria_comparisons?.length);
+
     if (criteria_comparisons && criteria_comparisons.length > 0) {
       const criteriaCompValues = criteria_comparisons.map((comp) => [
         session_id,
@@ -179,7 +183,6 @@ exports.createReport = async (req, res) => {
         comp.supplier_b_id,
         comp.comparison_value,
       ]);
-
       await new Promise((resolve, reject) => {
         connection.query(
           "INSERT INTO supplier_comparisons (session_id, criteria_id, supplier_a_id, supplier_b_id, comparison_value) VALUES ?",
@@ -194,18 +197,17 @@ exports.createReport = async (req, res) => {
 
     // 8. Insert AHP results (rankings)
     if (rankings && rankings.length > 0) {
-      // Insert ke tabel lama untuk backward compatibility
       const rankingValues = rankings.map((ranking) => [
         reportId,
+        session_id,
         ranking.supplierName,
         ranking.nama_supply,
         ranking.ranking,
         ranking.alokasi_kebutuhan,
       ]);
-
       await new Promise((resolve, reject) => {
         connection.query(
-          "INSERT INTO rankingsuppliers (reportId, supplierName, nama_supply, ranking, alokasi_kebutuhan) VALUES ?",
+          "INSERT INTO rankingsuppliers (reportId, session_id, supplierName, nama_supply, ranking, alokasi_kebutuhan) VALUES ?",
           [rankingValues],
           (err, result) => {
             if (err) reject(err);
@@ -311,18 +313,15 @@ const generatePDFForReportOptimized = async (reportId, sessionId) => {
     // Get AHP results (rankings)
     const rankingsQuery = `
   SELECT ar.final_score, ar.ranking_position, s.nama, rs.alokasi_kebutuhan
-  FROM ahp_results ar
-  JOIN supplier s ON ar.supplier_id = s.id
-  LEFT JOIN rankingsuppliers rs 
-    ON ar.supplier_id = rs.id AND rs.reportId = ?
-  WHERE ar.session_id = ?
-  ORDER BY ar.ranking_position ASC
+FROM ahp_results ar
+JOIN supplier s ON ar.supplier_id = s.id
+LEFT JOIN rankingsuppliers rs 
+  ON ar.session_id = rs.session_id AND rs.supplierName = s.nama AND rs.reportId = ?
+WHERE ar.session_id = ?
+ORDER BY ar.ranking_position ASC
 `;
 
     const rankingsResults = await dbQuery(rankingsQuery, [reportId, sessionId]);
-    console.log("Pantek = ", data);
-    console.log("Pantek 2 = ", criteriaResults);
-    console.log("Pantek 3 = ", rankingsResults);
     // Ensure PDF directory exists
     const folderPath = path.join(__dirname, "../public/pdf");
     try {
@@ -336,82 +335,126 @@ const generatePDFForReportOptimized = async (reportId, sessionId) => {
 
     // Generate PDF with streams for better performance
     return new Promise((resolve, reject) => {
-      const doc = new PDFDocument();
+      const doc = new PDFDocument({ margin: 50 });
       const stream = require("fs").createWriteStream(filePath);
 
       doc.pipe(stream);
 
-      // PDF Content
       doc
-        .fontSize(20)
-        .text("Laporan Pengadaan Supply - Metode AHP", { align: "center" });
-      doc.moveDown();
-
-      // Basic Information
-      doc
+        .fontSize(16)
+        .text("Rekomendasi Suppliers dengan AHP", { align: "left" })
         .fontSize(12)
-        .text(`Nama Barang: ${data.nama_kebutuhan}`)
-        .text(`Jumlah: ${data.jumlah_kebutuhan}`)
-        .text(`Nama Pemesan: ${data.nama_pemesan}`)
-        .text(`No. Telepon: ${data.no_hp}`)
-        .text(`Dibuat oleh: ${data.username}`)
-        .text(
-          `Tanggal Input: ${new Date(data.tanggal_input).toLocaleDateString()}`
-        )
+        .text("Jl. Terbaik No. 123, Jakarta")
+        .text("Telp: (021) 12345678 | www.IndonesiaEmas.co.id")
+        .moveTo(50, doc.y + 10)
+        .lineTo(550, doc.y + 10)
+        .stroke();
+
+      doc.moveDown(2);
+
+      doc
+        .fontSize(16)
+        .text("LAPORAN PENGADAAN SUPPLY - METODE AHP", { align: "center" });
+      doc
+        .moveDown(0.5)
+        .fontSize(11)
         .text(
           `Tanggal Laporan: ${new Date(
             data.tanggal_laporan
           ).toLocaleDateString()}`
         );
 
-      // Consistency Ratio
-      if (data.consistency_ratio) {
-        doc.moveDown();
-        const statusText =
-          data.consistency_ratio <= 0.1 ? "Konsisten" : "Tidak Konsisten";
+      doc.moveDown();
+
+      doc.fontSize(11).text("Informasi Umum", { underline: true });
+      doc.moveDown(0.5);
+      const info = [
+        [`Nama Barang`, data.nama_kebutuhan],
+        [`Jumlah`, data.jumlah_kebutuhan],
+        [`Nama Pemesan`, data.nama_pemesan],
+        [`No. Telepon`, data.no_hp],
+        [`Dibuat oleh`, data.username],
+        [`Tanggal Input`, new Date(data.tanggal_input).toLocaleDateString()],
+      ];
+
+      info.forEach(([label, value]) => {
         doc
-          .fontSize(12)
-          .text(
-            `Rasio Konsistensi: ${data.consistency_ratio.toFixed(
-              4
-            )} (${statusText})`
-          );
-      }
+          .font("Helvetica-Bold")
+          .text(`${label}:`, { continued: true })
+          .font("Helvetica")
+          .text(` ${value}`);
+      });
+      
+      if (data.consistency_ratio) {
+      doc.moveDown();
+      const statusText = data.consistency_ratio <= 0.1 ? "Konsisten" : "Tidak Konsisten";
+      doc
+        .font("Helvetica-Bold")
+        .text("Rasio Konsistensi:", { continued: true })
+        .font("Helvetica")
+        .text(` ${data.consistency_ratio.toFixed(4)} (${statusText})`);
+    }
 
-      // Criteria Weights
-      if (criteriaResults.length > 0) {
-        doc.moveDown();
-        doc.fontSize(14).text("Bobot Kriteria:", { underline: true });
-        doc.moveDown(0.5);
+    if (criteriaResults.length > 0) {
+      doc.moveDown();
+      doc.fontSize(12).font("Helvetica-Bold").text("Bobot Kriteria", { underline: true });
+      doc.moveDown(0.5);
 
-        criteriaResults.forEach((criterion) => {
-          doc
-            .fontSize(10)
-            .text(
-              `• ${criterion.nama}: ${(criterion.weight_value * 100).toFixed(
-                2
-              )}%`
-            );
-        });
-      }
+      criteriaResults.forEach((criterion) => {
+        doc
+          .font("Helvetica")
+          .fontSize(10)
+          .text(`• ${criterion.nama}: ${(criterion.weight_value * 100).toFixed(2)}%`);
+      });
+    }
 
-      // Rankings
       if (rankingsResults.length > 0) {
         doc.moveDown();
-        doc.fontSize(14).text("Ranking Suppliers:", { underline: true });
-        doc.moveDown(0.5);
+        doc
+          .fontSize(12)
+          .font("Helvetica-Bold")
+          .text("Ranking Supplier", { underline: true });
+        doc.moveDown();
 
-        rankingsResults.forEach((rank) => {
-          const alokasiText = rank.alokasi_kebutuhan
-            ? ` | Alokasi: ${rank.alokasi_kebutuhan}`
-            : "";
+        const tableTop = doc.y + 10;
+        const itemX = 50;
+        const colWidths = [50, 200, 100, 150];
+
+        doc
+          .fontSize(10)
+          .font("Helvetica-Bold")
+          .text("No", itemX, tableTop)
+          .text("Nama Supplier", itemX + colWidths[0], tableTop)
+          .text("Score", itemX + colWidths[0] + colWidths[1], tableTop)
+          .text(
+            "Alokasi",
+            itemX + colWidths[0] + colWidths[1] + colWidths[2],
+            tableTop
+          );
+
+        doc
+          .moveTo(itemX, tableTop + 15)
+          .lineTo(550, tableTop + 15)
+          .stroke();
+
+        let y = tableTop + 25;
+        rankingsResults.forEach((rank, index) => {
           doc
+            .font("Helvetica")
             .fontSize(10)
+            .text(`${rank.ranking_position}`, itemX, y)
+            .text(rank.nama, itemX + colWidths[0], y)
             .text(
-              `${rank.ranking_position}. ${
-                rank.nama
-              } - Score: ${rank.final_score.toFixed(4)}${alokasiText}`
+              rank.final_score.toFixed(4),
+              itemX + colWidths[0] + colWidths[1],
+              y
+            )
+            .text(
+              rank.alokasi_kebutuhan || "-",
+              itemX + colWidths[0] + colWidths[1] + colWidths[2],
+              y
             );
+          y += 20;
         });
       }
 

@@ -199,7 +199,6 @@ exports.createReport = async (req, res) => {
     if (rankings && rankings.length > 0) {
       const rankingValues = rankings.map((ranking) => [
         reportId,
-        session_id,
         ranking.supplierName,
         ranking.nama_supply,
         ranking.ranking,
@@ -207,7 +206,7 @@ exports.createReport = async (req, res) => {
       ]);
       await new Promise((resolve, reject) => {
         connection.query(
-          "INSERT INTO rankingsuppliers (reportId, session_id, supplierName, nama_supply, ranking, alokasi_kebutuhan) VALUES ?",
+          "INSERT INTO rankingsuppliers (reportId, supplierName, nama_supply, ranking, alokasi_kebutuhan) VALUES ?",
           [rankingValues],
           (err, result) => {
             if (err) reject(err);
@@ -316,7 +315,7 @@ const generatePDFForReportOptimized = async (reportId, sessionId) => {
 FROM ahp_results ar
 JOIN supplier s ON ar.supplier_id = s.id
 LEFT JOIN rankingsuppliers rs 
-  ON ar.session_id = rs.session_id AND rs.supplierName = s.nama AND rs.reportId = ?
+  ON rs.supplierName = s.nama AND rs.reportId = ?
 WHERE ar.session_id = ?
 ORDER BY ar.ranking_position ASC
 `;
@@ -335,29 +334,47 @@ ORDER BY ar.ranking_position ASC
 
     // Generate PDF with streams for better performance
     return new Promise((resolve, reject) => {
-      const doc = new PDFDocument({ margin: 50 });
-      const stream = require("fs").createWriteStream(filePath);
+      const fs = require("fs");
+      const path = require("path");
+      const PDFDocument = require("pdfkit");
 
+      const doc = new PDFDocument({ margin: 50 });
+      const stream = fs.createWriteStream(filePath);
       doc.pipe(stream);
 
+      // === LOGO & HEADER ===
+      const logoPath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "images",
+        "logo_pindad.png"
+      );
+      doc.image(logoPath, 50, 40, { width: 60 });
+
       doc
         .fontSize(16)
-        .text("Rekomendasi Suppliers dengan AHP", { align: "left" })
+        .font("Helvetica-Bold")
+        .text("Rekomendasi Suppliers dengan AHP", 120, 40)
         .fontSize(12)
-        .text("Jl. Terbaik No. 123, Jakarta")
-        .text("Telp: (021) 12345678 | www.IndonesiaEmas.co.id")
-        .moveTo(50, doc.y + 10)
-        .lineTo(550, doc.y + 10)
-        .stroke();
+        .font("Helvetica")
+        .text("Jl. Terbaik No. 123, Jakarta", 120)
+        .text("Telp: (021) 12345678 | www.IndonesiaEmas.co.id", 120);
+
+      doc.moveTo(50, 110).lineTo(550, 110).stroke();
 
       doc.moveDown(2);
-
+      doc.x = 50;
+      // === JUDUL & TANGGAL LAPORAN ===
       doc
         .fontSize(16)
+        .font("Helvetica-Bold")
         .text("LAPORAN PENGADAAN SUPPLY - METODE AHP", { align: "center" });
+
       doc
         .moveDown(0.5)
         .fontSize(11)
+        .font("Helvetica")
         .text(
           `Tanggal Laporan: ${new Date(
             data.tanggal_laporan
@@ -366,15 +383,20 @@ ORDER BY ar.ranking_position ASC
 
       doc.moveDown();
 
-      doc.fontSize(11).text("Informasi Umum", { underline: true });
+      // === INFORMASI UMUM ===
+      doc
+        .fontSize(12)
+        .font("Helvetica-Bold")
+        .text("Informasi Umum", { underline: true });
       doc.moveDown(0.5);
+
       const info = [
-        [`Nama Barang`, data.nama_kebutuhan],
-        [`Jumlah`, data.jumlah_kebutuhan],
-        [`Nama Pemesan`, data.nama_pemesan],
-        [`No. Telepon`, data.no_hp],
-        [`Dibuat oleh`, data.username],
-        [`Tanggal Input`, new Date(data.tanggal_input).toLocaleDateString()],
+        ["Nama Barang", data.nama_kebutuhan],
+        ["Jumlah", data.jumlah_kebutuhan],
+        ["Nama Pemesan", data.nama_pemesan],
+        ["No. Telepon", data.no_hp],
+        ["Dibuat oleh", data.username],
+        ["Tanggal Input", new Date(data.tanggal_input).toLocaleDateString()],
       ];
 
       info.forEach(([label, value]) => {
@@ -384,30 +406,41 @@ ORDER BY ar.ranking_position ASC
           .font("Helvetica")
           .text(` ${value}`);
       });
-      
+
+      // === RASIO KONSISTENSI ===
       if (data.consistency_ratio) {
-      doc.moveDown();
-      const statusText = data.consistency_ratio <= 0.1 ? "Konsisten" : "Tidak Konsisten";
-      doc
-        .font("Helvetica-Bold")
-        .text("Rasio Konsistensi:", { continued: true })
-        .font("Helvetica")
-        .text(` ${data.consistency_ratio.toFixed(4)} (${statusText})`);
-    }
-
-    if (criteriaResults.length > 0) {
-      doc.moveDown();
-      doc.fontSize(12).font("Helvetica-Bold").text("Bobot Kriteria", { underline: true });
-      doc.moveDown(0.5);
-
-      criteriaResults.forEach((criterion) => {
+        doc.moveDown();
+        const statusText =
+          data.consistency_ratio <= 0.1 ? "Konsisten" : "Tidak Konsisten";
         doc
+          .font("Helvetica-Bold")
+          .text("Rasio Konsistensi:", { continued: true })
           .font("Helvetica")
-          .fontSize(10)
-          .text(`• ${criterion.nama}: ${(criterion.weight_value * 100).toFixed(2)}%`);
-      });
-    }
+          .text(` ${data.consistency_ratio.toFixed(4)} (${statusText})`);
+      }
 
+      // === BOBOT KRITERIA ===
+      if (criteriaResults.length > 0) {
+        doc.moveDown();
+        doc
+          .fontSize(12)
+          .font("Helvetica-Bold")
+          .text("Bobot Kriteria", { underline: true });
+        doc.moveDown(0.5);
+
+        criteriaResults.forEach((criterion) => {
+          doc
+            .font("Helvetica")
+            .fontSize(10)
+            .text(
+              `• ${criterion.nama}: ${(criterion.weight_value * 100).toFixed(
+                2
+              )}%`
+            );
+        });
+      }
+
+      // === RANKING SUPPLIER ===
       if (rankingsResults.length > 0) {
         doc.moveDown();
         doc
@@ -438,7 +471,7 @@ ORDER BY ar.ranking_position ASC
           .stroke();
 
         let y = tableTop + 25;
-        rankingsResults.forEach((rank, index) => {
+        rankingsResults.forEach((rank) => {
           doc
             .font("Helvetica")
             .fontSize(10)
@@ -456,6 +489,36 @@ ORDER BY ar.ranking_position ASC
             );
           y += 20;
         });
+
+        // === TANDA TANGAN USERNAME (kiri bawah) ===
+        y += 40;
+        const signBoxWidth = 150;
+        const signBoxHeight = 60;
+        doc.rect(itemX, y, signBoxWidth, signBoxHeight).stroke();
+
+        const usernameText = data.username;
+        const usernameWidth = doc.widthOfString(usernameText);
+        doc.fontSize(10).text(
+          usernameText,
+          itemX + (signBoxWidth - usernameWidth) / 2, // tengah horizontal
+          y + signBoxHeight + 5 // di bawah kotak
+        );
+
+        // === APPROVAL MANAGER (kanan bawah) ===
+        const approvalX = 400;
+        const approvalWidth = 100;
+        const approvalHeight = 60;
+        doc.rect(approvalX, y, approvalWidth, approvalHeight).stroke();
+
+        const approvalText = "Approval Manager";
+        const approvalTextWidth = doc.widthOfString(approvalText);
+        doc
+          .fontSize(10)
+          .text(
+            approvalText,
+            approvalX + (approvalWidth - approvalTextWidth) / 2,
+            y + approvalHeight + 5
+          );
       }
 
       doc.end();

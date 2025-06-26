@@ -4,6 +4,7 @@ const db = require("../models/db");
 exports.createSupplier = (req, res) => {
   const { nama, alamat, contact, keterangan } = req.body;
 
+  // Step 1: Tambah supplier dulu
   db.query(
     "INSERT INTO supplier (nama, alamat, contact, keterangan) VALUES (?, ?, ?, ?)",
     [nama, alamat, contact, keterangan],
@@ -12,9 +13,44 @@ exports.createSupplier = (req, res) => {
         console.error(err);
         return res.status(500).json({ message: "Gagal menambahkan supplier" });
       }
-      res.json({
-        message: "Supplier berhasil ditambahkan",
-        supplier_id: result.insertId,
+
+      const supplierId = result.insertId;
+
+      // Step 2: Ambil semua nama kriteria
+      db.query("SELECT nama FROM kriteria", (err, kriteriaResults) => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .json({ message: "Gagal mengambil data kriteria" });
+        }
+
+        // Step 3: Siapkan data untuk insert
+        const nilaiInsertData = kriteriaResults.map((kriteria) => [
+          supplierId,
+          kriteria.nama,
+          Math.floor(Math.random() * 10) + 1, // nilai antara 1 - 10
+        ]);
+
+        // Step 4: Insert semua ke nilaikriteriasupplier
+        db.query(
+          "INSERT INTO nilaikriteriasupplier (supplierId, namaKriteria, nilai) VALUES ?",
+          [nilaiInsertData],
+          (err2) => {
+            if (err2) {
+              console.error(err2);
+              return res
+                .status(500)
+                .json({ message: "Gagal menambahkan nilai kriteria supplier" });
+            }
+
+            // Success
+            res.json({
+              message: "Supplier dan nilai kriteria berhasil ditambahkan",
+              supplier_id: supplierId,
+            });
+          }
+        );
       });
     }
   );

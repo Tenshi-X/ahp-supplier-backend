@@ -16,7 +16,7 @@ exports.login = (req, res) => {
       const user = results[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch)
-        return res.status(401).json({ message: "Username / Password " });
+        return res.status(401).json({ message: "Username / Password Salah" });
 
       const token = jwt.sign(
         { id: user.id, role: user.role },

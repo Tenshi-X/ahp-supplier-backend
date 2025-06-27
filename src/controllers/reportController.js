@@ -355,10 +355,10 @@ ORDER BY ar.ranking_position ASC
       doc
         .fontSize(16)
         .font("Helvetica-Bold")
-        .text("Rekomendasi Suppliers dengan AHP", 120, 40)
+        .text("Sistem Informasi Penentuan Prioritas Supplier dengan Metode AHP", 120, 40)
         .fontSize(12)
         .font("Helvetica")
-        .text("Jl. Terbaik No. 123, Jakarta", 120)
+        .text("Jl. Terusan Gatot Subroto No.517, Sukapura, Kec. Kiaracondong, Kota Bandung, Jawa Barat 40285", 120)
         .text("Telp: (021) 12345678 | www.IndonesiaEmas.co.id", 120);
 
       doc.moveTo(50, 110).lineTo(550, 110).stroke();

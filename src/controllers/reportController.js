@@ -358,8 +358,8 @@ ORDER BY ar.ranking_position ASC
         .text("Rekomendasi Suppliers dengan AHP", 120, 40)
         .fontSize(12)
         .font("Helvetica")
-        .text("Jl. Terbaik No. 123, Jakarta", 120)
-        .text("Telp: (021) 12345678 | www.IndonesiaEmas.co.id", 120);
+        .text("Jl. Gatot Subroto, No 517 Bandung, Indonesia, 40285", 120)
+        .text("Telp: (022) 7312073 | https://pindad.com", 120);
 
       doc.moveTo(50, 110).lineTo(550, 110).stroke();
 

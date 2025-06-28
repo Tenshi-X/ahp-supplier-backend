@@ -1,4 +1,0 @@
-### Login
-### Get unique nama_supply
-GET http://localhost:5000/api/reports/staffReport/7
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nywicm9sZSI6InN0YWZmIiwiaWF0IjoxNzQ4OTczMjI3LCJleHAiOjE3NDkwNTk2Mjd9.hilg5vcKPsJ5aZmpNOrHvYWXE2BfC-EDwkvN2GXdyUg

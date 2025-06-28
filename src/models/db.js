@@ -5,7 +5,7 @@ const db = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "ahp-supply",
+  database: "ahpc2971_ahp-supply",
 });
 
 db.getConnection((err, connection) => {
